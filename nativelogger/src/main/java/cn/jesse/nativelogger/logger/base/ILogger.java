@@ -6,6 +6,7 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
  * Created by jesse on 9/6/16.
  */
 public interface ILogger {
+    void setTag(String tag);
     String tag();
 
     boolean isDebugEnabled();

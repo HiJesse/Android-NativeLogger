@@ -1,4 +1,4 @@
-Android-OmegaNet
+Android-NativeLogger
 ================
 
 NativeLogger in Android

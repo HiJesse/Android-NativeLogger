@@ -6,7 +6,7 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
  * Created by jesse on 9/6/16.
  */
 public abstract class AbstractLogger implements ILogger{
-    protected final String tag;
+    protected String tag;
 
     protected AbstractLogger(String tag) {
         if (tag == null) {
@@ -18,6 +18,11 @@ public abstract class AbstractLogger implements ILogger{
     @Override
     public String tag() {
         return tag;
+    }
+
+    @Override
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     @Override

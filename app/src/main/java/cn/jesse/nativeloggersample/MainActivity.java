@@ -1,5 +1,6 @@
 package cn.jesse.nativeloggersample;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,9 +13,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NLogger.i("log before config");
+
         NLogger.getInstance()
                 .builder()
-                .setPeriod(4)
+                .tag("NEW")
+                .logDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
+                .packPeriod(4)
                 .build();
 
         NLogger.i("test local log");

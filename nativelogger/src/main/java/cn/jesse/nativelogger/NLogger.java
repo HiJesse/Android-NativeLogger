@@ -1,8 +1,12 @@
 package cn.jesse.nativelogger;
 
+import android.os.Environment;
 import android.text.TextUtils;
 
+import java.io.File;
+
 import cn.jesse.nativelogger.logger.AndroidLogger;
+import cn.jesse.nativelogger.logger.FileLogger;
 import cn.jesse.nativelogger.logger.base.ILogger;
 
 /**
@@ -13,8 +17,8 @@ public class NLogger extends AbstractNativeLogger{
     private static NLogger mInstance;
     private static Builder builder;
 
-    private ILogger defaultLogger = new AndroidLogger(TAG);
-    private ILogger fileLogger;
+    private volatile ILogger defaultLogger = new AndroidLogger(TAG);
+    private volatile ILogger fileLogger;
 
     private NLogger() {
 
@@ -36,11 +40,24 @@ public class NLogger extends AbstractNativeLogger{
     }
 
     /**
-     * build builder to native logger
+     * build builder to android logger & file logger
      * @param builder
      * @return
      */
-    private NLogger build(Builder builder) {
+    private synchronized NLogger build(Builder builder) {
+        defaultLogger.setTag(builder.tag);
+
+        if (!builder.isFileLoggerEnable) {
+            fileLogger = null;
+            return mInstance;
+        }
+
+        if (fileLogger == null) {
+            fileLogger = new FileLogger(builder.tag);
+        } else {
+            fileLogger.setTag(builder.tag);
+        }
+
         return mInstance;
     }
 
@@ -80,27 +97,25 @@ public class NLogger extends AbstractNativeLogger{
     public static final class Builder {
         private boolean isFileLoggerEnable = true;
         private String tag = NLogger.class.getSimpleName();
+        private String logDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
         private int packPeriod = 1;
 
         /**
-         * set file logger enbale
+         * init builder , prepare env
          *
          */
-        public Builder setFileLoggerEnable(boolean enable) {
-            this.isFileLoggerEnable = enable;
-            return this;
+        public Builder() {
+            File filePath = new File(logDirectory);
+            if (!filePath.exists())
+                filePath.mkdirs();
         }
 
         /**
-         * set pack log period
+         * set file logger enable
          *
-         * @throws IllegalArgumentException if the period < 0
          */
-        public Builder setPeriod(int period) {
-            if (period < 0)
-                throw new IllegalArgumentException("unexpected period : " + period);
-
-            packPeriod = period;
+        public Builder fileLogger(boolean enable) {
+            this.isFileLoggerEnable = enable;
             return this;
         }
 
@@ -109,11 +124,42 @@ public class NLogger extends AbstractNativeLogger{
          *
          * @throws IllegalArgumentException if the tag is null | empty
          */
-        public Builder setTag(String tag) {
+        public Builder tag(String tag) {
             if (TextUtils.isEmpty(tag))
                 throw new IllegalArgumentException("unexpected tag");
 
             this.tag = tag;
+            return this;
+        }
+
+        /**
+         * set pack log period
+         *
+         * @throws IllegalArgumentException if the period < 0
+         */
+        public Builder logDirectory(String path) {
+            if (TextUtils.isEmpty(path))
+                throw new IllegalArgumentException("unexpected path");
+
+            File filePath = new File(path);
+            if (!filePath.exists())
+                if (!filePath.mkdirs())
+                    throw new IllegalArgumentException("unexpected path");
+
+            this.logDirectory = path;
+            return this;
+        }
+
+        /**
+         * set pack log period
+         *
+         * @throws IllegalArgumentException if the period < 0
+         */
+        public Builder packPeriod(int period) {
+            if (period < 0)
+                throw new IllegalArgumentException("unexpected period : " + period);
+
+            packPeriod = period;
             return this;
         }
 
