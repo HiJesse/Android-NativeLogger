@@ -1,5 +1,7 @@
 package cn.jesse.nativelogger.logger;
 
+import android.util.Log;
+
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 
 /**
@@ -7,7 +9,7 @@ import cn.jesse.nativelogger.logger.base.AbstractLogger;
  */
 public class AndroidLogger extends AbstractLogger {
 
-    protected AndroidLogger(String tag) {
+    public AndroidLogger(String tag) {
         super(tag);
     }
 
@@ -18,7 +20,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void debug(String msg) {
-
+        Log.d(tag, msg);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void info(String msg) {
-
+        Log.i(tag, msg);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void warn(String msg) {
-
+        Log.w(tag, msg);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void error(String msg) {
-
+        Log.e(tag, msg);
     }
 
     @Override

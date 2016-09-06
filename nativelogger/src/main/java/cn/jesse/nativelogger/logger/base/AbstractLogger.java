@@ -6,7 +6,7 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
  * Created by jesse on 9/6/16.
  */
 public abstract class AbstractLogger implements ILogger{
-    private final String tag;
+    protected final String tag;
 
     protected AbstractLogger(String tag) {
         if (tag == null) {

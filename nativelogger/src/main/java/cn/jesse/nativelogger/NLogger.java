@@ -2,14 +2,21 @@ package cn.jesse.nativelogger;
 
 import android.text.TextUtils;
 
+import cn.jesse.nativelogger.logger.AndroidLogger;
+import cn.jesse.nativelogger.logger.base.ILogger;
+
 /**
  * Created by jesse on 9/5/16.
  */
-public class NativeLogger {
-    private static NativeLogger mInstance;
+public class NLogger extends AbstractNativeLogger{
+    private static final String TAG = NLogger.class.getSimpleName();
+    private static NLogger mInstance;
     private static Builder builder;
 
-    private NativeLogger() {
+    private ILogger defaultLogger = new AndroidLogger(TAG);
+    private ILogger fileLogger;
+
+    private NLogger() {
 
     }
 
@@ -17,11 +24,11 @@ public class NativeLogger {
      * get instance
      * @return
      */
-    public static NativeLogger getInstance() {
+    public static NLogger getInstance() {
         if (mInstance == null) {
-            synchronized (NativeLogger.class) {
+            synchronized (NLogger.class) {
                 if (mInstance == null) {
-                    mInstance = new NativeLogger();
+                    mInstance = new NLogger();
                 }
             }
         }
@@ -33,7 +40,7 @@ public class NativeLogger {
      * @param builder
      * @return
      */
-    private NativeLogger build(Builder builder) {
+    private NLogger build(Builder builder) {
         return mInstance;
     }
 
@@ -43,7 +50,7 @@ public class NativeLogger {
      */
     public Builder builder() {
         if (builder == null) {
-            synchronized (NativeLogger.class) {
+            synchronized (NLogger.class) {
                 if (builder == null) {
                     builder = new Builder();
                 }
@@ -52,9 +59,27 @@ public class NativeLogger {
         return builder;
     }
 
+    /**
+     * get android logger
+     *
+     */
+    @Override
+    ILogger getDefaultLogger() {
+        return this.defaultLogger;
+    }
+
+    /**
+     * get file logger
+     *
+     */
+    @Override
+    ILogger getFileLogger() {
+        return this.fileLogger;
+    }
+
     public static final class Builder {
         private boolean isFileLoggerEnable = true;
-        private String tag = NativeLogger.class.getSimpleName();
+        private String tag = NLogger.class.getSimpleName();
         private int packPeriod = 1;
 
         /**
@@ -92,7 +117,7 @@ public class NativeLogger {
             return this;
         }
 
-        public NativeLogger build() {
+        public NLogger build() {
             return mInstance.build(this);
         }
     }
