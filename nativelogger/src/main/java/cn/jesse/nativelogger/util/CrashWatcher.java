@@ -6,6 +6,7 @@ package cn.jesse.nativelogger.util;
 public class CrashWatcher implements Thread.UncaughtExceptionHandler {
     private static CrashWatcher mInstance = new CrashWatcher();
     private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private UncaughtExceptionListener listener;
 
     private CrashWatcher() {
     }
@@ -19,9 +20,17 @@ public class CrashWatcher implements Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
-        ex.printStackTrace();
+    public void setListener(UncaughtExceptionListener listener) {
+        this.listener = listener;
     }
 
+    @Override
+    public void uncaughtException(Thread thread, Throwable ex) {
+        if (null != listener)
+            listener.uncaughtException(thread, ex);
+    }
+
+    public interface UncaughtExceptionListener {
+        void uncaughtException(Thread thread, Throwable ex);
+    }
 }

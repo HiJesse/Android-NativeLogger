@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.util.CrashWatcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +18,13 @@ public class MainActivity extends AppCompatActivity {
 
         NLogger.getInstance()
                 .builder()
+                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
+                    @Override
+                    public void uncaughtException(Thread thread, Throwable ex) {
+                        NLogger.e("uncaughtException : " + ex.getMessage());
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                })
                 .tag("NEW")
                 .logDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
                 .packPeriod(4)
@@ -26,5 +34,7 @@ public class MainActivity extends AppCompatActivity {
         NLogger.d("test local log");
         NLogger.w("test local log");
         NLogger.e("test local log");
+
+        int i = 0 / 0;
     }
 }

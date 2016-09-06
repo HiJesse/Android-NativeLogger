@@ -7,7 +7,9 @@ import java.io.File;
 
 import cn.jesse.nativelogger.logger.AndroidLogger;
 import cn.jesse.nativelogger.logger.FileLogger;
+import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.logger.base.ILogger;
+import cn.jesse.nativelogger.util.CrashWatcher;
 
 /**
  * Created by jesse on 9/5/16.
@@ -40,11 +42,18 @@ public class NLogger extends AbstractNativeLogger{
     }
 
     /**
-     * build builder to android logger & file logger
+     * build builder to android logger & file logger & exception watcher
      * @param builder
      * @return
      */
     private synchronized NLogger build(Builder builder) {
+        if (builder.isCatchException) {
+            CrashWatcher.getInstance().init();
+            CrashWatcher.getInstance().setListener(builder.uncaughtExceptionListener);
+        } else
+            CrashWatcher.getInstance().setListener(null);
+
+
         defaultLogger.setTag(builder.tag);
 
         if (!builder.isFileLoggerEnable) {
@@ -54,9 +63,14 @@ public class NLogger extends AbstractNativeLogger{
 
         if (fileLogger == null) {
             fileLogger = new FileLogger(builder.tag);
+
+
         } else {
             fileLogger.setTag(builder.tag);
         }
+
+        IFileLogger iFileLogger = (IFileLogger) fileLogger;
+        iFileLogger.setLogDirectory(builder.logDirectory);
 
         return mInstance;
     }
@@ -95,6 +109,8 @@ public class NLogger extends AbstractNativeLogger{
     }
 
     public static final class Builder {
+        private boolean isCatchException = true;
+        private CrashWatcher.UncaughtExceptionListener uncaughtExceptionListener;
         private boolean isFileLoggerEnable = true;
         private String tag = NLogger.class.getSimpleName();
         private String logDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
@@ -108,6 +124,23 @@ public class NLogger extends AbstractNativeLogger{
             File filePath = new File(logDirectory);
             if (!filePath.exists())
                 filePath.mkdirs();
+
+            uncaughtExceptionListener = new CrashWatcher.UncaughtExceptionListener() {
+                @Override
+                public void uncaughtException(Thread thread, Throwable ex) {
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            };
+        }
+
+        /**
+         * catch uncaught exception
+         *
+         */
+        public Builder catchException(boolean enable, CrashWatcher.UncaughtExceptionListener listener) {
+            this.isCatchException = enable;
+            this.uncaughtExceptionListener = listener;
+            return this;
         }
 
         /**
