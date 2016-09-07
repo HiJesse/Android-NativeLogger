@@ -4,7 +4,9 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.logging.Formatter;
 
+import cn.jesse.nativelogger.formatter.SimpleFormatter;
 import cn.jesse.nativelogger.logger.AndroidLogger;
 import cn.jesse.nativelogger.logger.FileLogger;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
@@ -70,7 +72,7 @@ public class NLogger extends AbstractNativeLogger{
         }
 
         IFileLogger iFileLogger = (IFileLogger) fileLogger;
-        iFileLogger.setLogDirectory(builder.logDirectory);
+        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter);
 
         return mInstance;
     }
@@ -113,7 +115,8 @@ public class NLogger extends AbstractNativeLogger{
         private CrashWatcher.UncaughtExceptionListener uncaughtExceptionListener;
         private boolean isFileLoggerEnable = true;
         private String tag = NLogger.class.getSimpleName();
-        private String logDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
+        private String fileDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
+        private Formatter fileFormatter = new SimpleFormatter();
         private int packPeriod = 1;
 
         /**
@@ -121,7 +124,7 @@ public class NLogger extends AbstractNativeLogger{
          *
          */
         public Builder() {
-            File filePath = new File(logDirectory);
+            File filePath = new File(fileDirectory);
             if (!filePath.exists())
                 filePath.mkdirs();
 
@@ -168,9 +171,9 @@ public class NLogger extends AbstractNativeLogger{
         /**
          * set pack log period
          *
-         * @throws IllegalArgumentException if the period < 0
+         * @throws IllegalArgumentException if the path is empty
          */
-        public Builder logDirectory(String path) {
+        public Builder fileDirectory(String path) {
             if (TextUtils.isEmpty(path))
                 throw new IllegalArgumentException("unexpected path");
 
@@ -179,7 +182,20 @@ public class NLogger extends AbstractNativeLogger{
                 if (!filePath.mkdirs())
                     throw new IllegalArgumentException("unexpected path");
 
-            this.logDirectory = path;
+            this.fileDirectory = path;
+            return this;
+        }
+
+        /**
+         * set file logger formatter
+         *
+         * @throws IllegalArgumentException if the formatter is null
+         */
+        public Builder fileFormatter(Formatter formatter) {
+            if (null == formatter)
+                throw new IllegalArgumentException("unexpected file formatter");
+
+            this.fileFormatter = formatter;
             return this;
         }
 

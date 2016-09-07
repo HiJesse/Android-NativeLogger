@@ -1,9 +1,12 @@
 package cn.jesse.nativelogger.logger.base;
 
+import java.util.logging.Formatter;
+
 /**
  * Created by jesse on 9/6/16.
  */
 public interface IFileLogger {
-    void setLogDirectory(String directory);
+    void setFilePathAndFormatter(String directory, Formatter formatter);
     String logDirectory();
+    Formatter fileFormatter();
 }

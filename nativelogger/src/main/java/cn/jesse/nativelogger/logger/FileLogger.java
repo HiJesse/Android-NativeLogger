@@ -1,10 +1,15 @@
 package cn.jesse.nativelogger.logger;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
@@ -16,17 +21,27 @@ import cn.jesse.nativelogger.util.DateUtils;
 public class FileLogger extends AbstractLogger implements IFileLogger{
     final transient Logger logger;
     private StringBuffer directory;
+    private Formatter formatter;
+
+    private HandlerThread fileLoggerThread;
+    private Handler handler;
 
     public FileLogger(String tag) {
         super(tag);
+
+        fileLoggerThread = new HandlerThread(FileLogger.class.getSimpleName());
+        fileLoggerThread.start();
+        handler = new Handler(fileLoggerThread.getLooper());
+
         this.logger = Logger.getLogger(tag);
         logger.setUseParentHandlers(false);
     }
 
 
     @Override
-    public void setLogDirectory(String dir) {
+    public void setFilePathAndFormatter(String dir, Formatter formatter) {
         directory = new StringBuffer(dir);
+        this.formatter = formatter;
         if (!dir.endsWith("/"))
             directory.append("/");
 
@@ -37,7 +52,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         FileHandler fh;
         try {
             fh = new FileHandler(file.toString(), true);
-            fh.setFormatter( new SimpleFormatter() );
+            fh.setFormatter(formatter);
 
             logger.addHandler(fh);
         } catch (IOException e) {
@@ -48,6 +63,18 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     @Override
     public String logDirectory() {
         return null == directory ? null : directory.toString();
+    }
+
+    @Override
+    public Formatter fileFormatter() {
+        return this.formatter;
+    }
+
+    private synchronized void log(Level level, String msg, Throwable t) {
+        LogRecord record = new LogRecord(level, msg);
+        record.setLoggerName(tag);
+        record.setThrown(t);
+        logger.log(record);
     }
 
     @Override
@@ -86,8 +113,13 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void info(String msg) {
-        logger.info(msg);
+    public void info(final String msg) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, msg, null);
+            }
+        });
     }
 
     @Override
@@ -116,8 +148,13 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void warn(String msg) {
-        logger.warning(msg);
+    public void warn(final String msg) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.WARNING, msg, null);
+            }
+        });
     }
 
     @Override

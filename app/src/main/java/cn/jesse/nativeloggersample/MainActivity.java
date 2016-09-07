@@ -4,8 +4,11 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.Date;
+
 import cn.jesse.nativelogger.NLogger;
 import cn.jesse.nativelogger.util.CrashWatcher;
+import cn.jesse.nativelogger.util.DateUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,15 +29,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .tag("NEW")
-                .logDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
+                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
                 .packPeriod(4)
                 .build();
 
-        NLogger.i("test local log");
+        NLogger.i("test local log" + new Date().getTime());
         NLogger.d("test local log");
         NLogger.w("test local log");
         NLogger.e("test local log");
-
-        int i = 0 / 0;
     }
 }
