@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import cn.jesse.nativelogger.formatter.TagFormatter;
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.util.DateUtils;
@@ -79,41 +80,49 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
 
     @Override
     public boolean isDebugEnabled() {
-        return false;
+        return logger.isLoggable(Level.FINE);
     }
 
     @Override
     public void debug(String msg) {
+        if (isDebugEnabled())
+            log(Level.FINE, msg, null);
+    }
+
+    @Override
+    public void debug(String subTag, String msg) {
 
     }
 
     @Override
-    public void debug(String format, Object arg) {
+    public void debug(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void debug(String format, Object argA, Object argB) {
+    public void debug(String subTag, String format, Object argA, Object argB) {
 
     }
 
     @Override
-    public void debug(String format, Object... arguments) {
+    public void debug(String subTag, String format, Object... arguments) {
 
     }
 
     @Override
-    public void debug(String msg, Throwable t) {
+    public void debug(String subTag, Throwable t) {
 
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return false;
+        return logger.isLoggable(Level.INFO);
     }
 
     @Override
     public void info(final String msg) {
+        if (!isInfoEnabled())
+            return;
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -123,28 +132,69 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void info(String format, Object arg) {
-
+    public void info(final String subTag, final String msg) {
+        if (!isInfoEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, TagFormatter.format(subTag, msg), null);
+            }
+        });
     }
 
     @Override
-    public void info(String format, Object argA, Object argB) {
-
+    public void info(final String subTag, final String format, final Object arg) {
+        if (!isInfoEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, TagFormatter.format(subTag, format, arg), null);
+            }
+        });
     }
 
     @Override
-    public void info(String format, Object... arguments) {
-
+    public void info(final String subTag, final String format, final Object argA, final Object argB) {
+        if (!isInfoEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, TagFormatter.format(subTag, format, argA, argB), null);
+            }
+        });
     }
 
     @Override
-    public void info(String msg, Throwable t) {
-
+    public void info(final String subTag, final String format, final Object... arguments) {
+        if (!isInfoEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, TagFormatter.format(subTag, format, arguments), null);
+            }
+        });
     }
+
+    @Override
+    public void info(final String subTag, final Throwable t) {
+        if (!isInfoEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.INFO, subTag, t);
+            }
+        });
+    }
+
 
     @Override
     public boolean isWarnEnabled() {
-        return false;
+        return logger.isLoggable(Level.WARNING);
     }
 
     @Override
@@ -158,28 +208,34 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void warn(String format, Object arg) {
+    public void warn(String subTag, String msg) {
 
     }
 
     @Override
-    public void warn(String format, Object... arguments) {
+    public void warn(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void warn(String format, Object argA, Object argB) {
+    public void warn(String subTag, String format, Object... arguments) {
 
     }
 
     @Override
-    public void warn(String msg, Throwable t) {
+    public void warn(String subTag, String format, Object argA, Object argB) {
 
     }
+
+    @Override
+    public void warn(String subTag, Throwable t) {
+
+    }
+
 
     @Override
     public boolean isErrorEnabled() {
-        return false;
+        return logger.isLoggable(Level.SEVERE);
     }
 
     @Override
@@ -187,22 +243,28 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void error(String format, Object arg) {
+    public void error(String subTag, String msg) {
 
     }
 
     @Override
-    public void error(String format, Object argA, Object argB) {
+    public void error(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void error(String format, Object... arguments) {
+    public void error(String subTag, String format, Object argA, Object argB) {
 
     }
 
     @Override
-    public void error(String msg, Throwable t) {
+    public void error(String subTag, String format, Object... arguments) {
 
     }
+
+    @Override
+    public void error(String subTag, Throwable t) {
+
+    }
+
 }

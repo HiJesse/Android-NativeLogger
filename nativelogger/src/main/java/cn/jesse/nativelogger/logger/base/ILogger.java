@@ -13,59 +13,69 @@ public interface ILogger {
 
     void debug(String msg);
 
-    void debug(String format, Object arg);
+    void debug(String subTag, String msg);
 
-    void debug(String format, Object argA, Object argB);
+    void debug(String subTag, String format, Object arg);
 
-    void debug(String format, Object... arguments);
+    void debug(String subTag, String format, Object argA, Object argB);
 
-    void debug(String msg, Throwable t);
+    void debug(String subTag, String format, Object... arguments);
+
+    void debug(String subTag, Throwable t);
 
     boolean isInfoEnabled();
 
     void info(String msg);
 
-    void info(String format, Object arg);
+    void info(String subTag, String msg);
 
-    void info(String format, Object argA, Object argB);
+    void info(String subTag, String format, Object arg);
 
-    void info(String format, Object... arguments);
+    void info(String subTag, String format, Object argA, Object argB);
 
-    void info(String msg, Throwable t);
+    void info(String subTag, String format, Object... arguments);
+
+    void info(String subTag, Throwable t);
 
     boolean isWarnEnabled();
 
     void warn(String msg);
 
-    void warn(String format, Object arg);
+    void warn(String subTag, String msg);
 
-    void warn(String format, Object... arguments);
+    void warn(String subTag, String format, Object arg);
 
-    void warn(String format, Object argA, Object argB);
+    void warn(String subTag, String format, Object... arguments);
 
-    void warn(String msg, Throwable t);
+    void warn(String subTag, String format, Object argA, Object argB);
+
+    void warn(String subTag, Throwable t);
 
     boolean isErrorEnabled();
 
     void error(String msg);
 
-    void error(String format, Object arg);
+    void error(String subTag, String msg);
 
-    void error(String format, Object argA, Object argB);
+    void error(String subTag, String format, Object arg);
 
-    void error(String format, Object... arguments);
+    void error(String subTag, String format, Object argA, Object argB);
 
-    void error(String msg, Throwable t);
+    void error(String subTag, String format, Object... arguments);
+
+    void error(String subTag, Throwable t);
 
     boolean isEnabled(LoggerLevel level);
 
     void log(LoggerLevel level, String msg);
 
-    void log(LoggerLevel level, String format, Object arg);
+    void log(LoggerLevel level, String subTag, String msg);
 
-    void log(LoggerLevel level, String format, Object argA, Object argB);
+    void log(LoggerLevel level, String subTag, String format, Object arg);
 
-    void log(LoggerLevel level, String format, Object... arguments);
+    void log(LoggerLevel level, String subTag, String format, Object argA, Object argB);
 
-    void log(LoggerLevel level, String msg, Throwable t);
+    void log(LoggerLevel level, String subTag, String format, Object... arguments);
+
+    void log(LoggerLevel level, String subTag, Throwable t);
 }

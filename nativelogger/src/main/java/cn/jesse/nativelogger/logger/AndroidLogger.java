@@ -20,26 +20,31 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void debug(String msg) {
-        Log.d(tag, msg);
-    }
-
-    @Override
-    public void debug(String format, Object arg) {
 
     }
 
     @Override
-    public void debug(String format, Object argA, Object argB) {
+    public void debug(String subTag, String msg) {
 
     }
 
     @Override
-    public void debug(String format, Object... arguments) {
+    public void debug(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void debug(String msg, Throwable t) {
+    public void debug(String subTag, String format, Object argA, Object argB) {
+
+    }
+
+    @Override
+    public void debug(String subTag, String format, Object... arguments) {
+
+    }
+
+    @Override
+    public void debug(String subTag, Throwable t) {
 
     }
 
@@ -50,26 +55,31 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void info(String msg) {
-        Log.i(tag, msg);
-    }
-
-    @Override
-    public void info(String format, Object arg) {
 
     }
 
     @Override
-    public void info(String format, Object argA, Object argB) {
+    public void info(String subTag, String msg) {
 
     }
 
     @Override
-    public void info(String format, Object... arguments) {
+    public void info(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void info(String msg, Throwable t) {
+    public void info(String subTag, String format, Object argA, Object argB) {
+
+    }
+
+    @Override
+    public void info(String subTag, String format, Object... arguments) {
+
+    }
+
+    @Override
+    public void info(String subTag, Throwable t) {
 
     }
 
@@ -80,26 +90,31 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void warn(String msg) {
-        Log.w(tag, msg);
-    }
-
-    @Override
-    public void warn(String format, Object arg) {
 
     }
 
     @Override
-    public void warn(String format, Object... arguments) {
+    public void warn(String subTag, String msg) {
 
     }
 
     @Override
-    public void warn(String format, Object argA, Object argB) {
+    public void warn(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void warn(String msg, Throwable t) {
+    public void warn(String subTag, String format, Object... arguments) {
+
+    }
+
+    @Override
+    public void warn(String subTag, String format, Object argA, Object argB) {
+
+    }
+
+    @Override
+    public void warn(String subTag, Throwable t) {
 
     }
 
@@ -110,26 +125,31 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public void error(String msg) {
-        Log.e(tag, msg);
-    }
-
-    @Override
-    public void error(String format, Object arg) {
 
     }
 
     @Override
-    public void error(String format, Object argA, Object argB) {
+    public void error(String subTag, String msg) {
 
     }
 
     @Override
-    public void error(String format, Object... arguments) {
+    public void error(String subTag, String format, Object arg) {
 
     }
 
     @Override
-    public void error(String msg, Throwable t) {
+    public void error(String subTag, String format, Object argA, Object argB) {
+
+    }
+
+    @Override
+    public void error(String subTag, String format, Object... arguments) {
+
+    }
+
+    @Override
+    public void error(String subTag, Throwable t) {
 
     }
 }

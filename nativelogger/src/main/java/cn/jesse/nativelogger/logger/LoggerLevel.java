@@ -7,5 +7,6 @@ public enum  LoggerLevel {
     DEBUG,
     INFO,
     WARN,
-    ERROR
+    ERROR,
+    OFF
 }

@@ -9,6 +9,10 @@ import java.util.logging.LogRecord;
 
 /**
  * Created by jesse on 9/7/16.
+ *
+ * eg.
+ * 2016-09-07 23:23:23 NLogger: INFO
+ * SplashActivity was created
  */
 public class SimpleFormatter extends Formatter {
     private static final String LINE_SEPARATOR = "\n";
