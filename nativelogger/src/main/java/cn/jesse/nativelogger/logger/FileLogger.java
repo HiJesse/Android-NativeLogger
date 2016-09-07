@@ -183,12 +183,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     public void info(final String subTag, final Throwable t) {
         if (!isInfoEnabled())
             return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, subTag, t);
-            }
-        });
+        log(Level.INFO, subTag, t);
     }
 
 

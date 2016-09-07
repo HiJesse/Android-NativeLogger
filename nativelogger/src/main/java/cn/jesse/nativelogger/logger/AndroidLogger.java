@@ -2,6 +2,7 @@ package cn.jesse.nativelogger.logger;
 
 import android.util.Log;
 
+import cn.jesse.nativelogger.formatter.TagFormatter;
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 
 /**
@@ -50,37 +51,49 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public boolean isInfoEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void info(String msg) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, msg);
     }
 
     @Override
     public void info(String subTag, String msg) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, TagFormatter.format(subTag, msg));
     }
 
     @Override
     public void info(String subTag, String format, Object arg) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, TagFormatter.format(subTag, format, arg));
     }
 
     @Override
     public void info(String subTag, String format, Object argA, Object argB) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, TagFormatter.format(subTag, format, argA, argB));
     }
 
     @Override
     public void info(String subTag, String format, Object... arguments) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, TagFormatter.format(subTag, format, arguments));
     }
 
     @Override
     public void info(String subTag, Throwable t) {
-
+        if (!isInfoEnabled())
+            return;
+        Log.i(tag, t.getMessage());
     }
 
     @Override

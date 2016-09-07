@@ -54,6 +54,15 @@ public abstract class AbstractNativeLogger {
         NLogger.getInstance().getFileLogger().info(tag, format, args);
     }
 
+    public static void i(String tag, Throwable ex) {
+        NLogger.getInstance().getDefaultLogger().info(tag, ex);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().info(tag, ex);
+    }
+
     public static void d(String msg) {
         NLogger.getInstance().getDefaultLogger().debug(msg);
 

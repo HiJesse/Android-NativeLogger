@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity {
 
         NLogger.getInstance()
                 .builder()
-//                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
-//                    @Override
-//                    public void uncaughtException(Thread thread, Throwable ex) {
-//                        NLogger.e("uncaughtException : " + ex.getMessage());
-//                        android.os.Process.killProcess(android.os.Process.myPid());
-//                    }
-//                })
+                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
+                    @Override
+                    public void uncaughtException(Thread thread, Throwable ex) {
+                        NLogger.i("uncaughtException", ex);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                })
                 .tag("NEW")
                 .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
                 .packPeriod(4)
@@ -39,5 +39,7 @@ public class MainActivity extends AppCompatActivity {
         NLogger.i("MainActivity", "%s", "type2");
         NLogger.i("MainActivity", "%s%d", "type", 3);
         NLogger.i("MainActivity", "%s%d%s", "type", 4, " finish");
+
+        int i = 0 / 0;
     }
 }
