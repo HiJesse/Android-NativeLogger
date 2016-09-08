@@ -1,5 +1,8 @@
 package cn.jesse.nativelogger.formatter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by jesse on 9/7/16.
  */
@@ -42,6 +45,24 @@ public class TagFormatter {
             result = String.format("%s : %s", subTag, String.format(format, args));
         } catch (Exception e){
             result = RESULT_UNEXPECTED_FORMAT + " with " + format;
+        }
+        return result;
+    }
+
+    public static String format(Throwable t) {
+        String result = "";
+        if (null == t)
+            return result;
+
+        PrintWriter pw = null;
+        try {
+            StringWriter sw = new StringWriter();
+            pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            result = sw.toString();
+        } finally {
+            if (null != pw)
+                pw.close();
         }
         return result;
     }

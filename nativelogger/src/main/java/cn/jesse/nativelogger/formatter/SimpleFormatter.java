@@ -1,7 +1,5 @@
 package cn.jesse.nativelogger.formatter;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
@@ -36,17 +34,7 @@ public class SimpleFormatter extends Formatter {
         sb.append(formatMessage(r)).append(LINE_SEPARATOR);
         if (r.getThrown() != null) {
             sb.append("Throwable occurred: ");
-            Throwable t = r.getThrown();
-            PrintWriter pw = null;
-            try {
-                StringWriter sw = new StringWriter();
-                pw = new PrintWriter(sw);
-                t.printStackTrace(pw);
-                sb.append(sw.toString());
-            } finally {
-                if (null != pw)
-                    pw.close();
-            }
+            sb.append(TagFormatter.format(r.getThrown()));
         }
         return sb.toString();
     }

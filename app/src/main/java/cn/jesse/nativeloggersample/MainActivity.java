@@ -42,5 +42,7 @@ public class MainActivity extends AppCompatActivity {
         NLogger.i("MainActivity", "%s%d", "type", 3);
         NLogger.i("MainActivity", "%s%d%s", "type", 4, " finish");
 
+        int i = 0 / 0;
+
     }
 }

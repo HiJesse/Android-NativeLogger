@@ -131,7 +131,7 @@ public class AndroidLogger extends AbstractLogger {
     public void info(String subTag, Throwable t) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, t.getMessage());
+        Log.i(tag, TagFormatter.format(t));
     }
 
     @Override
