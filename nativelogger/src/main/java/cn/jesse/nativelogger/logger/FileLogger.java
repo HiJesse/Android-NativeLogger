@@ -98,34 +98,70 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void debug(String msg) {
-        if (isDebugEnabled())
-            log(Level.FINE, msg, null);
+    public void debug(final String msg) {
+        if (!isDebugEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.FINE, msg, null);
+            }
+        });
     }
 
     @Override
-    public void debug(String subTag, String msg) {
-
+    public void debug(final String subTag, final String msg) {
+        if (!isDebugEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.FINE, TagFormatter.format(subTag, msg), null);
+            }
+        });
     }
 
     @Override
-    public void debug(String subTag, String format, Object arg) {
-
+    public void debug(final String subTag, final String format, final Object arg) {
+        if (!isDebugEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.FINE, TagFormatter.format(subTag, format, arg), null);
+            }
+        });
     }
 
     @Override
-    public void debug(String subTag, String format, Object argA, Object argB) {
-
+    public void debug(final String subTag, final String format, final Object argA, final Object argB) {
+        if (!isDebugEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.FINE, TagFormatter.format(subTag, format, argA, argB), null);
+            }
+        });
     }
 
     @Override
-    public void debug(String subTag, String format, Object... arguments) {
-
+    public void debug(final String subTag, final String format, final Object... arguments) {
+        if (!isDebugEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.FINE, TagFormatter.format(subTag, format, arguments), null);
+            }
+        });
     }
 
     @Override
     public void debug(String subTag, Throwable t) {
-
+        if (!isDebugEnabled())
+            return;
+        log(Level.FINE, subTag, t);
     }
 
     @Override
@@ -208,6 +244,8 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
 
     @Override
     public void warn(final String msg) {
+        if (!isWarnEnabled())
+            return;
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -217,28 +255,58 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void warn(String subTag, String msg) {
-
+    public void warn(final String subTag, final String msg) {
+        if (!isWarnEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.WARNING, TagFormatter.format(subTag, msg), null);
+            }
+        });
     }
 
     @Override
-    public void warn(String subTag, String format, Object arg) {
-
+    public void warn(final String subTag, final String format, final Object arg) {
+        if (!isWarnEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.WARNING, TagFormatter.format(subTag, format, arg), null);
+            }
+        });
     }
 
     @Override
-    public void warn(String subTag, String format, Object... arguments) {
-
+    public void warn(final String subTag, final String format, final Object... arguments) {
+        if (!isWarnEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.WARNING, TagFormatter.format(subTag, format, arguments), null);
+            }
+        });
     }
 
     @Override
-    public void warn(String subTag, String format, Object argA, Object argB) {
-
+    public void warn(final String subTag, final String format, final Object argA, final Object argB) {
+        if (!isWarnEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.WARNING, TagFormatter.format(subTag, format, argA, argB), null);
+            }
+        });
     }
 
     @Override
     public void warn(String subTag, Throwable t) {
-
+        if (!isWarnEnabled())
+            return;
+        log(Level.WARNING, subTag, t);
     }
 
 
@@ -248,32 +316,70 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void error(String msg) {
+    public void error(final String msg) {
+        if (!isErrorEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.SEVERE, msg, null);
+            }
+        });
     }
 
     @Override
-    public void error(String subTag, String msg) {
-
+    public void error(final String subTag, final String msg) {
+        if (!isErrorEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.SEVERE, TagFormatter.format(subTag, msg), null);
+            }
+        });
     }
 
     @Override
-    public void error(String subTag, String format, Object arg) {
-
+    public void error(final String subTag, final String format, final Object arg) {
+        if (!isErrorEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.SEVERE, TagFormatter.format(subTag, format, arg), null);
+            }
+        });
     }
 
     @Override
-    public void error(String subTag, String format, Object argA, Object argB) {
-
+    public void error(final String subTag, final String format, final Object argA, final Object argB) {
+        if (!isErrorEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.SEVERE, TagFormatter.format(subTag, format, argA, argB), null);
+            }
+        });
     }
 
     @Override
-    public void error(String subTag, String format, Object... arguments) {
-
+    public void error(final String subTag, final String format, final Object... arguments) {
+        if (!isErrorEnabled())
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                log(Level.SEVERE, TagFormatter.format(subTag, format, arguments), null);
+            }
+        });
     }
 
     @Override
     public void error(String subTag, Throwable t) {
-
+        if (!isErrorEnabled())
+            return;
+        log(Level.SEVERE, subTag, t);
     }
 
 }

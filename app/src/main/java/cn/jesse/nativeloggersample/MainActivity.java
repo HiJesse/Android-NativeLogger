@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
                 .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
                     @Override
                     public void uncaughtException(Thread thread, Throwable ex) {
-                        NLogger.i("uncaughtException", ex);
+                        NLogger.e("uncaughtException", ex);
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 })
@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
                 .packPeriod(4)
                 .build();
 
-        NLogger.i("type");
+        NLogger.d("type");
         NLogger.i("MainActivity", "type1");
-        NLogger.i("MainActivity", "%s", "type2");
-        NLogger.i("MainActivity", "%s%d", "type", 3);
-        NLogger.i("MainActivity", "%s%d%s", "type", 4, " finish");
+        NLogger.e("MainActivity", "%s", "type2");
+        NLogger.w("MainActivity", "%s%d", "type", 3);
+        NLogger.d("MainActivity", "%s%d%s", "type", 4, " finish");
 
         int i = 0 / 0;
 

@@ -72,6 +72,51 @@ public abstract class AbstractNativeLogger {
         NLogger.getInstance().getFileLogger().debug(msg);
     }
 
+    public static void d(String tag, String msg) {
+        NLogger.getInstance().getDefaultLogger().debug(tag, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().debug(tag, msg);
+    }
+
+    public static void d(String tag, String format, Object arg) {
+        NLogger.getInstance().getDefaultLogger().debug(tag, format, arg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().debug(tag, format, arg);
+    }
+
+    public static void d(String tag, String format, Object argA, Object argB) {
+        NLogger.getInstance().getDefaultLogger().debug(tag, format, argA, argB);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().debug(tag, format, argA, argB);
+    }
+
+    public static void d(String tag, String format, Object... args) {
+        NLogger.getInstance().getDefaultLogger().debug(tag, format, args);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().debug(tag, format, args);
+    }
+
+    public static void d(String tag, Throwable ex) {
+        NLogger.getInstance().getDefaultLogger().debug(tag, ex);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().debug(tag, ex);
+    }
+
     public static void w(String msg) {
         NLogger.getInstance().getDefaultLogger().warn(msg);
 
@@ -81,6 +126,51 @@ public abstract class AbstractNativeLogger {
         NLogger.getInstance().getFileLogger().warn(msg);
     }
 
+    public static void w(String tag, String msg) {
+        NLogger.getInstance().getDefaultLogger().warn(tag, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().warn(tag, msg);
+    }
+
+    public static void w(String tag, String format, Object arg) {
+        NLogger.getInstance().getDefaultLogger().warn(tag, format, arg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().warn(tag, format, arg);
+    }
+
+    public static void w(String tag, String format, Object argA, Object argB) {
+        NLogger.getInstance().getDefaultLogger().warn(tag, format, argA, argB);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().warn(tag, format, argA, argB);
+    }
+
+    public static void w(String tag, String format, Object... args) {
+        NLogger.getInstance().getDefaultLogger().warn(tag, format, args);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().warn(tag, format, args);
+    }
+
+    public static void w(String tag, Throwable ex) {
+        NLogger.getInstance().getDefaultLogger().warn(tag, ex);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().warn(tag, ex);
+    }
+
     public static void e(String msg) {
         NLogger.getInstance().getDefaultLogger().error(msg);
 
@@ -88,5 +178,50 @@ public abstract class AbstractNativeLogger {
             return;
 
         NLogger.getInstance().getFileLogger().error(msg);
+    }
+
+    public static void e(String tag, String msg) {
+        NLogger.getInstance().getDefaultLogger().error(tag, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().error(tag, msg);
+    }
+
+    public static void e(String tag, String format, Object arg) {
+        NLogger.getInstance().getDefaultLogger().error(tag, format, arg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().error(tag, format, arg);
+    }
+
+    public static void e(String tag, String format, Object argA, Object argB) {
+        NLogger.getInstance().getDefaultLogger().error(tag, format, argA, argB);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().error(tag, format, argA, argB);
+    }
+
+    public static void e(String tag, String format, Object... args) {
+        NLogger.getInstance().getDefaultLogger().error(tag, format, args);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().error(tag, format, args);
+    }
+
+    public static void e(String tag, Throwable ex) {
+        NLogger.getInstance().getDefaultLogger().error(tag, ex);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().error(tag, ex);
     }
 }
