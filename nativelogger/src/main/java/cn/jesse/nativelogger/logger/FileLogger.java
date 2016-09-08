@@ -15,14 +15,16 @@ import cn.jesse.nativelogger.formatter.TagFormatter;
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.util.DateUtils;
+import cn.jesse.nativelogger.util.ZipUtils;
 
 /**
  * Created by jesse on 9/6/16.
  */
 public class FileLogger extends AbstractLogger implements IFileLogger{
     final transient Logger logger;
-    private StringBuffer directory;
+    private String logDir;
     private Formatter formatter;
+    private int packNum;
 
     private HandlerThread fileLoggerThread;
     private Handler handler;
@@ -40,16 +42,15 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
 
 
     @Override
-    public void setFilePathAndFormatter(String dir, Formatter formatter) {
-        directory = new StringBuffer(dir);
+    public void setFilePathAndFormatter(final String dir, Formatter formatter, final int packNum) {
+        this.logDir = dir;
         this.formatter = formatter;
-        if (!dir.endsWith("/"))
-            directory.append("/");
+        this.packNum = packNum;
 
-        directory.append(DateUtils.getCurrentDate());
+        if (!logDir.endsWith("/"))
+            logDir += "/";
 
-
-        File file = new File(directory.toString());
+        File file = new File(logDir + DateUtils.getCurrentDate());
         FileHandler fh;
         try {
             fh = new FileHandler(file.toString(), true);
@@ -59,16 +60,47 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         } catch (IOException e) {
             //unused
         }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ZipUtils.getSuitableFilesWithClear(dir, packNum);
+            }
+        });
     }
 
     @Override
     public String logDirectory() {
-        return null == directory ? null : directory.toString();
+        return this.logDir;
     }
 
     @Override
     public Formatter fileFormatter() {
         return this.formatter;
+    }
+
+    @Override
+    public int packFileNum() {
+        return this.packNum;
+    }
+
+    @Override
+    public void zipLogs() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String targetZipFileName = logDir + DateUtils.getCurrentDate() + ZipUtils.SUFFIX_ZIP;
+                    File zipFile = new File(targetZipFileName);
+                    if (zipFile.exists())
+                        zipFile.delete();
+                    ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, packNum),
+                            zipFile, DateUtils.getCurrentDate());
+                } catch (Exception e) {
+                    error(tag, e.getCause());
+                }
+
+            }
+        });
     }
 
     @Override

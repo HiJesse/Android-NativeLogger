@@ -1,5 +1,6 @@
 package cn.jesse.nativelogger;
 
+import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.logger.base.ILogger;
 
 /**
@@ -8,6 +9,16 @@ import cn.jesse.nativelogger.logger.base.ILogger;
 public abstract class AbstractNativeLogger {
     abstract ILogger getDefaultLogger();
     abstract ILogger getFileLogger();
+
+    public static void zipLogs() {
+        IFileLogger fileLogger = (IFileLogger)NLogger.getInstance().getFileLogger();
+
+        if (null == fileLogger) {
+            w("unexpected zip logs, file logger is null");
+            return;
+        }
+        fileLogger.zipLogs();
+    }
 
     public static void i(String msg) {
         NLogger.getInstance().getDefaultLogger().info(msg);

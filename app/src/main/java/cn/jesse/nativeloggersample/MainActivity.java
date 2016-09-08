@@ -3,21 +3,23 @@ package cn.jesse.nativeloggersample;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import java.util.Date;
+import android.view.View;
+import android.widget.TextView;
 
 import cn.jesse.nativelogger.NLogger;
 import cn.jesse.nativelogger.formatter.SimpleFormatter;
 import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.util.CrashWatcher;
-import cn.jesse.nativelogger.util.DateUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private TextView test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        test = (TextView) findViewById(R.id.tv_test);
+        test.setOnClickListener(this);
 
         NLogger.i("log before config");
 
@@ -32,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 })
-                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
-                .packPeriod(4)
+//                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
+                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .packPeriod(3)
                 .build();
 
         NLogger.d("type");
@@ -42,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
         NLogger.w("MainActivity", "%s%d", "type", 3);
         NLogger.d("MainActivity", "%s%d%s", "type", 4, " finish");
 
-        int i = 0 / 0;
+    }
 
+    @Override
+    public void onClick(View v) {
+        NLogger.zipLogs();
     }
 }

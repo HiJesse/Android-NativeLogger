@@ -75,7 +75,7 @@ public class NLogger extends AbstractNativeLogger{
 
         fileLogger.setLevel(builder.loggerLevel);
         IFileLogger iFileLogger = (IFileLogger) fileLogger;
-        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter);
+        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.packPeriod);
 
         return mInstance;
     }
@@ -215,10 +215,10 @@ public class NLogger extends AbstractNativeLogger{
         /**
          * set pack log period
          *
-         * @throws IllegalArgumentException if the period < 0
+         * @throws IllegalArgumentException if the period <= 0
          */
         public Builder packPeriod(int period) {
-            if (period < 0)
+            if (period <= 0)
                 throw new IllegalArgumentException("unexpected period : " + period);
 
             packPeriod = period;
