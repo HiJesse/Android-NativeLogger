@@ -21,7 +21,7 @@ public class TagFormatter {
         try {
             result = String.format("%s : " + format, subTag, arg);
         } catch (Exception e){
-            result = RESULT_UNEXPECTED_FORMAT;
+            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;
     }
@@ -31,7 +31,7 @@ public class TagFormatter {
         try {
             result = String.format("%s : " + format, subTag, argA, argB);
         } catch (Exception e){
-            result = RESULT_UNEXPECTED_FORMAT;
+            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;
     }
@@ -41,7 +41,7 @@ public class TagFormatter {
         try {
             result = String.format("%s : %s", subTag, String.format(format, args));
         } catch (Exception e){
-            result = RESULT_UNEXPECTED_FORMAT;
+            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;
     }

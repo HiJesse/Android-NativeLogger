@@ -9,6 +9,7 @@ import java.util.logging.Formatter;
 import cn.jesse.nativelogger.formatter.SimpleFormatter;
 import cn.jesse.nativelogger.logger.AndroidLogger;
 import cn.jesse.nativelogger.logger.FileLogger;
+import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.logger.base.ILogger;
 import cn.jesse.nativelogger.util.CrashWatcher;
@@ -57,6 +58,7 @@ public class NLogger extends AbstractNativeLogger{
 
 
         defaultLogger.setTag(builder.tag);
+        defaultLogger.setLevel(builder.loggerLevel);
 
         if (!builder.isFileLoggerEnable) {
             fileLogger = null;
@@ -71,6 +73,7 @@ public class NLogger extends AbstractNativeLogger{
             fileLogger.setTag(builder.tag);
         }
 
+        fileLogger.setLevel(builder.loggerLevel);
         IFileLogger iFileLogger = (IFileLogger) fileLogger;
         iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter);
 
@@ -111,10 +114,11 @@ public class NLogger extends AbstractNativeLogger{
     }
 
     public static final class Builder {
-        private boolean isCatchException = true;
+        private String tag = NLogger.class.getSimpleName();
+        private LoggerLevel loggerLevel = LoggerLevel.WARN;
+        private boolean isCatchException = false;
         private CrashWatcher.UncaughtExceptionListener uncaughtExceptionListener;
         private boolean isFileLoggerEnable = true;
-        private String tag = NLogger.class.getSimpleName();
         private String fileDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
         private Formatter fileFormatter = new SimpleFormatter();
         private int packPeriod = 1;
@@ -137,6 +141,19 @@ public class NLogger extends AbstractNativeLogger{
         }
 
         /**
+         * set tag
+         *
+         * @throws IllegalArgumentException if the tag is null | empty
+         */
+        public Builder tag(String tag) {
+            if (TextUtils.isEmpty(tag))
+                throw new IllegalArgumentException("unexpected tag");
+
+            this.tag = tag;
+            return this;
+        }
+
+        /**
          * catch uncaught exception
          *
          */
@@ -147,24 +164,20 @@ public class NLogger extends AbstractNativeLogger{
         }
 
         /**
+         * set the logger level
+         *
+         */
+        public Builder loggerLevel(LoggerLevel level) {
+            this.loggerLevel = level;
+            return this;
+        }
+
+        /**
          * set file logger enable
          *
          */
         public Builder fileLogger(boolean enable) {
             this.isFileLoggerEnable = enable;
-            return this;
-        }
-
-        /**
-         * set tag
-         *
-         * @throws IllegalArgumentException if the tag is null | empty
-         */
-        public Builder tag(String tag) {
-            if (TextUtils.isEmpty(tag))
-                throw new IllegalArgumentException("unexpected tag");
-
-            this.tag = tag;
             return this;
         }
 

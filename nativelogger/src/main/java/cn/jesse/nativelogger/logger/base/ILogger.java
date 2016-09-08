@@ -9,6 +9,8 @@ public interface ILogger {
     void setTag(String tag);
     String tag();
 
+    void setLevel(LoggerLevel level);
+
     boolean isDebugEnabled();
 
     void debug(String msg);

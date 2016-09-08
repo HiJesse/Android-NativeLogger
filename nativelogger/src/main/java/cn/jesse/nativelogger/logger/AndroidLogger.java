@@ -9,14 +9,52 @@ import cn.jesse.nativelogger.logger.base.AbstractLogger;
  * Created by jesse on 9/6/16.
  */
 public class AndroidLogger extends AbstractLogger {
+    private boolean debugEnable = false;
+    private boolean infoEnable = false;
+    private boolean warningEnable = false;
+    private boolean errorEnable = false;
 
     public AndroidLogger(String tag) {
         super(tag);
     }
 
     @Override
+    public void setLevel(LoggerLevel level) {
+        if (LoggerLevel.DEBUG == level) {
+            debugEnable = true;
+            infoEnable = true;
+            warningEnable = true;
+            errorEnable = true;
+        }
+        else if (LoggerLevel.INFO == level){
+            debugEnable = false;
+            infoEnable = true;
+            warningEnable = true;
+            errorEnable = true;
+        }
+        else if (LoggerLevel.WARN == level){
+            debugEnable = false;
+            infoEnable = false;
+            warningEnable = true;
+            errorEnable = true;
+        }
+        else if (LoggerLevel.ERROR == level){
+            debugEnable = false;
+            infoEnable = false;
+            warningEnable = false;
+            errorEnable = true;
+        }
+        else if (LoggerLevel.OFF == level){
+            debugEnable = false;
+            infoEnable = false;
+            warningEnable = false;
+            errorEnable = false;
+        }
+    }
+
+    @Override
     public boolean isDebugEnabled() {
-        return false;
+        return debugEnable;
     }
 
     @Override
@@ -51,7 +89,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public boolean isInfoEnabled() {
-        return true;
+        return infoEnable;
     }
 
     @Override
@@ -98,7 +136,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public boolean isWarnEnabled() {
-        return false;
+        return warningEnable;
     }
 
     @Override
@@ -133,7 +171,7 @@ public class AndroidLogger extends AbstractLogger {
 
     @Override
     public boolean isErrorEnabled() {
-        return false;
+        return errorEnable;
     }
 
     @Override

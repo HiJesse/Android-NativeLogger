@@ -8,6 +8,7 @@ import java.util.Date;
 
 import cn.jesse.nativelogger.NLogger;
 import cn.jesse.nativelogger.formatter.SimpleFormatter;
+import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.util.CrashWatcher;
 import cn.jesse.nativelogger.util.DateUtils;
 
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
         NLogger.getInstance()
                 .builder()
+                .tag("NEW")
+                .loggerLevel(LoggerLevel.DEBUG)
                 .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
                     @Override
                     public void uncaughtException(Thread thread, Throwable ex) {
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 })
-                .tag("NEW")
                 .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
                 .packPeriod(4)
                 .build();
@@ -40,6 +42,5 @@ public class MainActivity extends AppCompatActivity {
         NLogger.i("MainActivity", "%s%d", "type", 3);
         NLogger.i("MainActivity", "%s%d%s", "type", 4, " finish");
 
-        int i = 0 / 0;
     }
 }

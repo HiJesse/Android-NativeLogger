@@ -16,6 +16,8 @@ public class CrashWatcher implements Thread.UncaughtExceptionHandler {
     }
 
     public void init() {
+        if (null != mDefaultHandler)
+            return;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
     }

@@ -71,6 +71,20 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         return this.formatter;
     }
 
+    @Override
+    public void setLevel(LoggerLevel level) {
+        if (LoggerLevel.DEBUG == level)
+            logger.setLevel(Level.FINE);
+        else if (LoggerLevel.INFO == level)
+            logger.setLevel(Level.INFO);
+        else if (LoggerLevel.WARN == level)
+            logger.setLevel(Level.WARNING);
+        else if (LoggerLevel.ERROR == level)
+            logger.setLevel(Level.SEVERE);
+        else if (LoggerLevel.OFF == level)
+            logger.setLevel(Level.OFF);
+    }
+
     private synchronized void log(Level level, String msg, Throwable t) {
         LogRecord record = new LogRecord(level, msg);
         record.setLoggerName(tag);
