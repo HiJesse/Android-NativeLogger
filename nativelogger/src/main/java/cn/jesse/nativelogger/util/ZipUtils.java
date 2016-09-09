@@ -57,8 +57,11 @@ public class ZipUtils {
      * @param zipFile zip to file
      * @param comment comment of target file
      */
-    public static void zipFiles(Collection<File> resFileList, File zipFile, String comment)
+    public static boolean zipFiles(Collection<File> resFileList, File zipFile, String comment)
             throws IOException {
+        if (null == resFileList || resFileList.size() == 0)
+            return false;
+
         ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(
                 zipFile), BUFF_SIZE));
         for (File resFile : resFileList) {
@@ -67,6 +70,7 @@ public class ZipUtils {
         if (!TextUtils.isEmpty(comment))
             zipOutputStream.setComment(comment);
         zipOutputStream.close();
+        return true;
     }
 
     /**

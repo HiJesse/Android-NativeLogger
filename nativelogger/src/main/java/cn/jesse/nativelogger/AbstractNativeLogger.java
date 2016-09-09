@@ -10,14 +10,14 @@ public abstract class AbstractNativeLogger {
     abstract ILogger getDefaultLogger();
     abstract ILogger getFileLogger();
 
-    public static void zipLogs() {
+    public static void zipLogs(IFileLogger.OnZipListener listener) {
         IFileLogger fileLogger = (IFileLogger)NLogger.getInstance().getFileLogger();
 
         if (null == fileLogger) {
             w("unexpected zip logs, file logger is null");
             return;
         }
-        fileLogger.zipLogs();
+        fileLogger.zipLogs(listener);
     }
 
     public static void i(String msg) {

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import cn.jesse.nativelogger.NLogger;
 import cn.jesse.nativelogger.formatter.SimpleFormatter;
 import cn.jesse.nativelogger.logger.LoggerLevel;
+import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.util.CrashWatcher;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 })
-//                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
-                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
+//                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
                 .packPeriod(3)
                 .build();
 
@@ -49,6 +50,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        NLogger.zipLogs();
+        NLogger.zipLogs(new IFileLogger.OnZipListener() {
+            @Override
+            public void onZip(boolean succeed, String target) {
+                if (succeed)
+                    NLogger.i("zip", "succeed : " + target);
+            }
+        });
     }
 }

@@ -84,21 +84,23 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public void zipLogs() {
+    public void zipLogs(final OnZipListener listener) {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                boolean result = false;
+                String targetZipFileName = logDir + DateUtils.getCurrentDate() + ZipUtils.SUFFIX_ZIP;
                 try {
-                    String targetZipFileName = logDir + DateUtils.getCurrentDate() + ZipUtils.SUFFIX_ZIP;
                     File zipFile = new File(targetZipFileName);
                     if (zipFile.exists())
                         zipFile.delete();
-                    ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, packNum),
+                    result = ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, packNum),
                             zipFile, DateUtils.getCurrentDate());
                 } catch (Exception e) {
                     error(tag, e.getCause());
                 }
-
+                if (null != listener)
+                    listener.onZip(result, targetZipFileName);
             }
         });
     }

@@ -11,5 +11,9 @@ public interface IFileLogger {
     Formatter fileFormatter();
     int packFileNum();
 
-    void zipLogs();
+    void zipLogs(OnZipListener listener);
+
+    interface OnZipListener {
+        void onZip(boolean succeed, String target);
+    }
 }
