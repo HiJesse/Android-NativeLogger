@@ -22,12 +22,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         test = (TextView) findViewById(R.id.tv_test);
         test.setOnClickListener(this);
 
-        NLogger.i("log before config");
+
 
         NLogger.getInstance()
                 .builder()
-                .tag("NEW")
+                .tag("APP")
                 .loggerLevel(LoggerLevel.DEBUG)
+                .fileLogger(true)
+                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
+//                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .fileFormatter(new SimpleFormatter())
+                .expiredPeriod(3)
                 .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
                     @Override
                     public void uncaughtException(Thread thread, Throwable ex) {
@@ -35,16 +40,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
                 })
-                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
-//                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
-                .packPeriod(3)
                 .build();
 
-        NLogger.d("type");
+        NLogger.d("debug");
         NLogger.i("MainActivity", "type1");
-        NLogger.e("MainActivity", "%s", "type2");
-        NLogger.w("MainActivity", "%s%d", "type", 3);
-        NLogger.d("MainActivity", "%s%d%s", "type", 4, " finish");
+        NLogger.w("MainActivity", "%s", "type2");
+        NLogger.d("MainActivity", "%s%d%s", "type", 3, " finish");
 
     }
 

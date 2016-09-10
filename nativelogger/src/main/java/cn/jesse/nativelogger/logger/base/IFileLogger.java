@@ -6,10 +6,10 @@ import java.util.logging.Formatter;
  * Created by jesse on 9/6/16.
  */
 public interface IFileLogger {
-    void setFilePathAndFormatter(String directory, Formatter formatter, int packNum);
+    void setFilePathAndFormatter(String directory, Formatter formatter, int expiredPeriod);
     String logDirectory();
     Formatter fileFormatter();
-    int packFileNum();
+    int expiredPeriod();
 
     void zipLogs(OnZipListener listener);
 

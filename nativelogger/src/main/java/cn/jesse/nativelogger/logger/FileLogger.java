@@ -24,7 +24,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     final transient Logger logger;
     private String logDir;
     private Formatter formatter;
-    private int packNum;
+    private int expiredPeriod;
 
     private HandlerThread fileLoggerThread;
     private Handler handler;
@@ -42,10 +42,10 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
 
 
     @Override
-    public void setFilePathAndFormatter(final String dir, Formatter formatter, final int packNum) {
+    public void setFilePathAndFormatter(final String dir, Formatter formatter, final int expiredPeriod) {
         this.logDir = dir;
         this.formatter = formatter;
-        this.packNum = packNum;
+        this.expiredPeriod = expiredPeriod;
 
         if (!logDir.endsWith("/"))
             logDir += "/";
@@ -63,7 +63,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         handler.post(new Runnable() {
             @Override
             public void run() {
-                ZipUtils.getSuitableFilesWithClear(dir, packNum);
+                ZipUtils.getSuitableFilesWithClear(dir, expiredPeriod);
             }
         });
     }
@@ -79,8 +79,8 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
     }
 
     @Override
-    public int packFileNum() {
-        return this.packNum;
+    public int expiredPeriod() {
+        return this.expiredPeriod;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
                     File zipFile = new File(targetZipFileName);
                     if (zipFile.exists())
                         zipFile.delete();
-                    result = ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, packNum),
+                    result = ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, expiredPeriod),
                             zipFile, DateUtils.getCurrentDate());
                 } catch (Exception e) {
                     error(tag, e.getCause());

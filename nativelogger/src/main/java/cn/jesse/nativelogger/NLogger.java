@@ -75,7 +75,7 @@ public class NLogger extends AbstractNativeLogger{
 
         fileLogger.setLevel(builder.loggerLevel);
         IFileLogger iFileLogger = (IFileLogger) fileLogger;
-        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.packPeriod);
+        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.expiredPeriod);
 
         return mInstance;
     }
@@ -121,7 +121,7 @@ public class NLogger extends AbstractNativeLogger{
         private boolean isFileLoggerEnable = true;
         private String fileDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
         private Formatter fileFormatter = new SimpleFormatter();
-        private int packPeriod = 1;
+        private int expiredPeriod = 1;
 
         /**
          * init builder , prepare env
@@ -213,15 +213,15 @@ public class NLogger extends AbstractNativeLogger{
         }
 
         /**
-         * set pack log period
+         * set the period of file expired
          *
          * @throws IllegalArgumentException if the period <= 0
          */
-        public Builder packPeriod(int period) {
+        public Builder expiredPeriod(int period) {
             if (period <= 0)
                 throw new IllegalArgumentException("unexpected period : " + period);
 
-            packPeriod = period;
+            expiredPeriod = period;
             return this;
         }
 

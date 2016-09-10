@@ -25,9 +25,9 @@ public class ZipUtils {
      * get suitable files from path depend on pack num ,clear redundant files
      *
      * @param path source files path
-     * @param packNum pack files num
+     * @param expiredPeriod expired file period
      */
-    public static Collection<File> getSuitableFilesWithClear(String path, int packNum) {
+    public static Collection<File> getSuitableFilesWithClear(String path, int expiredPeriod) {
         Collection<File> files = new CopyOnWriteArrayList<>();
         File file = new File(path);
         File[] subFile = file.listFiles();
@@ -36,7 +36,7 @@ public class ZipUtils {
             if (!subFile[iFileLength].isDirectory()) {
                 File item = subFile[iFileLength];
 
-                long expired = packNum * 24 * 60 * 60 * 1000;
+                long expired = expiredPeriod * 24 * 60 * 60 * 1000;
                 if (System.currentTimeMillis() - item.lastModified() > expired)
                     item.delete();
 

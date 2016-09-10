@@ -9,10 +9,10 @@ import cn.jesse.nativelogger.logger.base.AbstractLogger;
  * Created by jesse on 9/6/16.
  */
 public class AndroidLogger extends AbstractLogger {
-    private boolean debugEnable = false;
-    private boolean infoEnable = false;
-    private boolean warningEnable = false;
-    private boolean errorEnable = false;
+    private boolean debugEnable = true;
+    private boolean infoEnable = true;
+    private boolean warningEnable = true;
+    private boolean errorEnable = true;
 
     public AndroidLogger(String tag) {
         super(tag);
@@ -96,7 +96,7 @@ public class AndroidLogger extends AbstractLogger {
     public void debug(String subTag, Throwable t) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, TagFormatter.format(t));
+        Log.d(tag, subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -143,7 +143,7 @@ public class AndroidLogger extends AbstractLogger {
     public void info(String subTag, Throwable t) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, TagFormatter.format(t));
+        Log.i(tag, subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -190,7 +190,7 @@ public class AndroidLogger extends AbstractLogger {
     public void warn(String subTag, Throwable t) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, TagFormatter.format(t));
+        Log.w(tag, subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -237,6 +237,6 @@ public class AndroidLogger extends AbstractLogger {
     public void error(String subTag, Throwable t) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, TagFormatter.format(t));
+        Log.e(tag, subTag + " " + TagFormatter.format(t));
     }
 }
