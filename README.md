@@ -17,6 +17,7 @@ NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 适配Android 6.0 | - |
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 格式化输出JSON | - |
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 格式化输出XML | - |
+|![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 日志混淆 | - |
 
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png) : 已完成
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png) : 待完成
@@ -57,7 +58,7 @@ NLogger.e("uncaughtException", throwable);
         NLogger.getInstance()
                 .builder()
                 .tag("APP")
-                .loggerLevel(LoggerLevel.DEBUG)****
+                .loggerLevel(LoggerLevel.DEBUG)
                 .fileLogger(true)
                 .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
                 .fileFormatter(new SimpleFormatter())
