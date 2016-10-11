@@ -44,6 +44,21 @@ public class NLogger extends AbstractNativeLogger{
         return mInstance;
     }
 
+    public static void init(Object obj) {
+        Class clazz= obj.getClass();
+        if (!clazz.isAnnotationPresent(Logger.class))
+            return;
+
+        Logger inject= (Logger) clazz.getAnnotation(Logger.class);
+        String tag =inject.tag();
+        LoggerLevel level = inject.level();
+        NLogger.getInstance()
+                .builder()
+                .tag(tag)
+                .loggerLevel(level)
+                .build();
+    }
+
     /**
      * build builder to android logger & file logger & exception watcher
      * @param builder
@@ -118,7 +133,7 @@ public class NLogger extends AbstractNativeLogger{
         private LoggerLevel loggerLevel = LoggerLevel.WARN;
         private boolean isCatchException = false;
         private CrashWatcher.UncaughtExceptionListener uncaughtExceptionListener;
-        private boolean isFileLoggerEnable = true;
+        private boolean isFileLoggerEnable = false;
         private String fileDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
         private Formatter fileFormatter = new SimpleFormatter();
         private int expiredPeriod = 1;
