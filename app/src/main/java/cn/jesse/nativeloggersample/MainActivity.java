@@ -13,7 +13,7 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.util.CrashWatcher;
 
-@Logger(tag = "Test", level = LoggerLevel.WARN)
+@Logger(tag = "Test", level = Logger.INFO)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView test;
 

@@ -15,6 +15,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keepattributes SourceFile,LineNumberTable
--keepattributes *Annotation*
--keep class com.jesse.nativelogger {*;}

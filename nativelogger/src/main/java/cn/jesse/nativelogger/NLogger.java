@@ -51,7 +51,28 @@ public class NLogger extends AbstractNativeLogger{
 
         Logger inject= (Logger) clazz.getAnnotation(Logger.class);
         String tag =inject.tag();
-        LoggerLevel level = inject.level();
+        LoggerLevel level;
+
+        switch (inject.level()) {
+            case Logger.DEBUG:
+                level = LoggerLevel.DEBUG;
+                break;
+            case Logger.INFO:
+                level = LoggerLevel.INFO;
+                break;
+            case Logger.WARN:
+                level = LoggerLevel.WARN;
+                break;
+            case Logger.ERROR:
+                level = LoggerLevel.ERROR;
+                break;
+            case Logger.OFF:
+                level = LoggerLevel.OFF;
+                break;
+            default:
+                level = LoggerLevel.WARN;
+        }
+
         NLogger.getInstance()
                 .builder()
                 .tag(tag)
