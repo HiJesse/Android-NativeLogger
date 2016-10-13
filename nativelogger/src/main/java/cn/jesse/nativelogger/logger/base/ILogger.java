@@ -80,4 +80,12 @@ public interface ILogger {
     void log(LoggerLevel level, String subTag, String format, Object... arguments);
 
     void log(LoggerLevel level, String subTag, Throwable t);
+
+    void json(LoggerLevel level, String msg);
+
+    void json(LoggerLevel level, String subTag, String msg);
+
+    void xml(LoggerLevel level, String msg);
+
+    void xml(LoggerLevel level, String subTag, String msg);
 }

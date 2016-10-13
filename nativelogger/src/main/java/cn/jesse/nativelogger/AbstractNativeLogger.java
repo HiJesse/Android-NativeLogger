@@ -1,5 +1,6 @@
 package cn.jesse.nativelogger;
 
+import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
 import cn.jesse.nativelogger.logger.base.ILogger;
 
@@ -234,5 +235,41 @@ public abstract class AbstractNativeLogger {
             return;
 
         NLogger.getInstance().getFileLogger().error(tag, ex);
+    }
+
+    public static void json(LoggerLevel level, String msg) {
+        NLogger.getInstance().getDefaultLogger().json(level, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().json(level, msg);
+    }
+
+    public static void json(LoggerLevel level, String subTag, String msg) {
+        NLogger.getInstance().getDefaultLogger().json(level, subTag, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().json(level, subTag, msg);
+    }
+
+    public static void xml(LoggerLevel level, String msg) {
+        NLogger.getInstance().getDefaultLogger().xml(level, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().xml(level, msg);
+    }
+
+    public static void xml(LoggerLevel level, String subTag, String msg) {
+        NLogger.getInstance().getDefaultLogger().xml(level, subTag, msg);
+
+        if (NLogger.getInstance().getFileLogger() == null)
+            return;
+
+        NLogger.getInstance().getFileLogger().xml(level, subTag, msg);
     }
 }
