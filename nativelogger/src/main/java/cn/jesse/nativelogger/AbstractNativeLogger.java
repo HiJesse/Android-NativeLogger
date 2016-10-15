@@ -254,22 +254,4 @@ public abstract class AbstractNativeLogger {
 
         NLogger.getInstance().getFileLogger().json(level, subTag, msg);
     }
-
-    public static void xml(LoggerLevel level, String msg) {
-        NLogger.getInstance().getDefaultLogger().xml(level, msg);
-
-        if (NLogger.getInstance().getFileLogger() == null)
-            return;
-
-        NLogger.getInstance().getFileLogger().xml(level, msg);
-    }
-
-    public static void xml(LoggerLevel level, String subTag, String msg) {
-        NLogger.getInstance().getDefaultLogger().xml(level, subTag, msg);
-
-        if (NLogger.getInstance().getFileLogger() == null)
-            return;
-
-        NLogger.getInstance().getFileLogger().xml(level, subTag, msg);
-    }
 }

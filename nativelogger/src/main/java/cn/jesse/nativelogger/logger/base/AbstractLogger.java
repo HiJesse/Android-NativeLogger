@@ -3,24 +3,6 @@ package cn.jesse.nativelogger.logger.base;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import cn.jesse.nativelogger.logger.LoggerLevel;
 
@@ -235,56 +217,6 @@ public abstract class AbstractLogger implements ILogger{
         }
     }
 
-    @Override
-    public void xml(LoggerLevel level, String msg) {
-        if (!isEnabled(level))
-            return;
-
-        msg = parseXML(msg);
-
-        switch (level) {
-            case DEBUG:
-                debug(msg);
-                break;
-            case INFO:
-                info(msg);
-                break;
-            case WARN:
-                warn(msg);
-                break;
-            case ERROR:
-                error(msg);
-                break;
-            default:
-                throw new Error("unexpected LoggerLevel");
-        }
-    }
-
-    @Override
-    public void xml(LoggerLevel level, String subTag, String msg) {
-        if (!isEnabled(level))
-            return;
-
-        msg = parseXML(msg);
-
-        switch (level) {
-            case DEBUG:
-                debug(subTag, msg);
-                break;
-            case INFO:
-                info(subTag, msg);
-                break;
-            case WARN:
-                warn(subTag, msg);
-                break;
-            case ERROR:
-                error(subTag, msg);
-                break;
-            default:
-                throw new Error("unexpected LoggerLevel");
-        }
-    }
-
     /**
      *  format json
      * as:
@@ -321,35 +253,5 @@ public abstract class AbstractLogger implements ILogger{
         }
 
         return json;
-    }
-
-    /**
-     * format xml
-     * @param xml
-     * @return
-     */
-    private String parseXML(String xml) {
-        if (null == xml)
-            return ERROR_FORMAT;
-
-        try {
-//            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//            DocumentBuilder db = dbf.newDocumentBuilder();
-//            InputSource is = new InputSource(new StringReader(xml));
-//            Document document = db.parse(is);
-//
-            Source xmlInput = new StreamSource(new StringReader(xml));
-            StreamResult xmlOutput = new StreamResult(new StringWriter());
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.transform(xmlInput, xmlOutput);
-            xml = xmlOutput.getWriter().toString().replaceFirst(">", ">\n");
-        } catch (TransformerException e) {
-            xml = ERROR_FORMAT;
-        }
-        return xml;
     }
 }

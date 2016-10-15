@@ -84,8 +84,4 @@ public interface ILogger {
     void json(LoggerLevel level, String msg);
 
     void json(LoggerLevel level, String subTag, String msg);
-
-    void xml(LoggerLevel level, String msg);
-
-    void xml(LoggerLevel level, String subTag, String msg);
 }
