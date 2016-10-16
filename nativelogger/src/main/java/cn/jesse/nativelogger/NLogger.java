@@ -44,6 +44,10 @@ public class NLogger extends AbstractNativeLogger{
         return mInstance;
     }
 
+    /**
+     * init NLogger from annotation
+     * @param obj
+     */
     public static void init(Object obj) {
         Class clazz= obj.getClass();
         if (!clazz.isAnnotationPresent(Logger.class))
