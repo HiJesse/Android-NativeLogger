@@ -1,1 +1,1 @@
-include ':app', ':nativelogger'
+include ':sample', ':nativelogger'
