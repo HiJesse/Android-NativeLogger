@@ -16,7 +16,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Created by jesse on 9/8/16.
  */
-public class ZipUtils {
+public class ZipUtil {
     private static final int BUFF_SIZE = 1024 * 1024;
     private static final String SUFFIX_LOCK = ".lck";
     public static final String SUFFIX_ZIP = ".zip";
@@ -31,6 +31,9 @@ public class ZipUtils {
         Collection<File> files = new CopyOnWriteArrayList<>();
         File file = new File(path);
         File[] subFile = file.listFiles();
+
+        if (null == subFile)
+            return files;
 
         for (int iFileLength = 0; iFileLength < subFile.length; iFileLength++) {
             if (!subFile[iFileLength].isDirectory()) {

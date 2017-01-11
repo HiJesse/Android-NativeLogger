@@ -233,7 +233,7 @@ public class NLogger extends AbstractNativeLogger{
             File filePath = new File(path);
             if (!filePath.exists())
                 if (!filePath.mkdirs())
-                    throw new IllegalArgumentException("unexpected path");
+                    NLogger.getInstance().defaultLogger.error(tag, "can not make dir, please check permission");
 
             this.fileDirectory = path;
             return this;

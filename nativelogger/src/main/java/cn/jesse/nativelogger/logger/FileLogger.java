@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 import cn.jesse.nativelogger.formatter.TagFormatter;
 import cn.jesse.nativelogger.logger.base.AbstractLogger;
 import cn.jesse.nativelogger.logger.base.IFileLogger;
-import cn.jesse.nativelogger.util.DateUtils;
-import cn.jesse.nativelogger.util.ZipUtils;
+import cn.jesse.nativelogger.util.DateUtil;
+import cn.jesse.nativelogger.util.ZipUtil;
 
 /**
  * Created by jesse on 9/6/16.
@@ -50,7 +50,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         if (!logDir.endsWith("/"))
             logDir += "/";
 
-        File file = new File(logDir + DateUtils.getCurrentDate());
+        File file = new File(logDir + DateUtil.getCurrentDate());
         FileHandler fh;
         try {
             fh = new FileHandler(file.toString(), true);
@@ -63,7 +63,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
         handler.post(new Runnable() {
             @Override
             public void run() {
-                ZipUtils.getSuitableFilesWithClear(dir, expiredPeriod);
+                ZipUtil.getSuitableFilesWithClear(dir, expiredPeriod);
             }
         });
     }
@@ -89,13 +89,13 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
             @Override
             public void run() {
                 boolean result = false;
-                String targetZipFileName = logDir + DateUtils.getCurrentDate() + ZipUtils.SUFFIX_ZIP;
+                String targetZipFileName = logDir + DateUtil.getCurrentDate() + ZipUtil.SUFFIX_ZIP;
                 try {
                     File zipFile = new File(targetZipFileName);
                     if (zipFile.exists())
                         zipFile.delete();
-                    result = ZipUtils.zipFiles(ZipUtils.getSuitableFilesWithClear(logDir, expiredPeriod),
-                            zipFile, DateUtils.getCurrentDate());
+                    result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
+                            zipFile, DateUtil.getCurrentDate());
                 } catch (Exception e) {
                     error(tag, e.getCause());
                 }
