@@ -16,7 +16,6 @@ NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 日志文件过期时间 | 1 day |
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 日志文件打包周期 | 1 day |
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 格式化输出JSON | 支持 |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 适配Android 6.0 | - |
 |![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 日志混淆 | - |
 
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png) : 已完成
@@ -36,7 +35,7 @@ repositories {
 
 ```
 dependencies {
-    compile "cn.jesse.android:nativelogger:1.1.0"
+    compile "cn.jesse.android:nativelogger:1.2.0"
 }
 ```
 
@@ -95,20 +94,3 @@ NLogger.zipLogs(new IFileLogger.OnZipListener() {
     }
 });
 ```
-
-
-##License
-
-    Copyright 2016 Jesse
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
