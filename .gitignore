@@ -2,13 +2,15 @@
 *.apk
 *.jks
 .gradle
-/gradle
 /local.properties
 /captures
 /.idea
 /build
 gradle.properties
 /nativelogger/deploy.gradle
+
+#Check
+/infer-out
 
 #Eclipse
 .project
