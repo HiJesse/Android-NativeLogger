@@ -19,8 +19,8 @@ import cn.jesse.nativelogger.util.CrashWatcher;
  */
 public class NLogger extends AbstractNativeLogger{
     private static final String TAG = NLogger.class.getSimpleName();
-    private static NLogger mInstance;
-    private static Builder builder;
+    private static volatile NLogger mInstance;
+    private static volatile Builder builder;
 
     private volatile ILogger defaultLogger = new AndroidLogger(TAG);
     private volatile ILogger fileLogger;
@@ -33,7 +33,7 @@ public class NLogger extends AbstractNativeLogger{
      * get instance
      * @return
      */
-    public static NLogger getInstance() {
+    public synchronized static NLogger getInstance() {
         if (mInstance == null) {
             synchronized (NLogger.class) {
                 if (mInstance == null) {
@@ -231,8 +231,7 @@ public class NLogger extends AbstractNativeLogger{
                 throw new IllegalArgumentException("unexpected path");
 
             File filePath = new File(path);
-            if (!filePath.exists())
-                if (!filePath.mkdirs())
+            if (!filePath.exists() && !filePath.mkdirs())
                     NLogger.getInstance().defaultLogger.error(tag, "can not make dir, please check permission");
 
             this.fileDirectory = path;

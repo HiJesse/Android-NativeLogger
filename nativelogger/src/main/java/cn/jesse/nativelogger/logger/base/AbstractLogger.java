@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.jesse.nativelogger.NLoggerError;
 import cn.jesse.nativelogger.logger.LoggerLevel;
 
 /**
@@ -12,6 +13,7 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
 public abstract class AbstractLogger implements ILogger{
     protected String tag;
     private final String ERROR_FORMAT = "unexpected format";
+    private final String ERROR_LEVEL = "unexpected LoggerLevel";
     private final int JSON_INDENT = 2;
 
     protected AbstractLogger(String tag) {
@@ -43,7 +45,7 @@ public abstract class AbstractLogger implements ILogger{
             case ERROR:
                 return isErrorEnabled();
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -63,7 +65,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(subTag, cause);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -83,7 +85,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(msg);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -103,7 +105,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(subTag, msg);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -123,7 +125,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(subTag, format, arg);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -143,7 +145,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(subTag, format, argA, argB);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -163,7 +165,7 @@ public abstract class AbstractLogger implements ILogger{
                 error(subTag, format, arguments);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -172,23 +174,23 @@ public abstract class AbstractLogger implements ILogger{
         if (!isEnabled(level))
             return;
 
-        msg = parseJson(msg);
+        String json = parseJson(msg);
 
         switch (level) {
             case DEBUG:
-                debug(msg);
+                debug(json);
                 break;
             case INFO:
-                info(msg);
+                info(json);
                 break;
             case WARN:
-                warn(msg);
+                warn(json);
                 break;
             case ERROR:
-                error(msg);
+                error(json);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -197,23 +199,23 @@ public abstract class AbstractLogger implements ILogger{
         if (!isEnabled(level))
             return;
 
-        msg = parseJson(msg);
+        String json = parseJson(msg);
 
         switch (level) {
             case DEBUG:
-                debug(subTag, msg);
+                debug(subTag, json);
                 break;
             case INFO:
-                info(subTag, msg);
+                info(subTag, json);
                 break;
             case WARN:
-                warn(subTag, msg);
+                warn(subTag, json);
                 break;
             case ERROR:
-                error(subTag, msg);
+                error(subTag, json);
                 break;
             default:
-                throw new Error("unexpected LoggerLevel");
+                throw new NLoggerError(ERROR_LEVEL);
         }
     }
 
@@ -236,22 +238,18 @@ public abstract class AbstractLogger implements ILogger{
             return ERROR_FORMAT;
 
         try {
-            json = json.trim();
             if (json.startsWith("{")) {
                 JSONObject jsonObject = new JSONObject(json);
-                String message = jsonObject.toString(JSON_INDENT);
-                return message;
+                return jsonObject.toString(JSON_INDENT);
             }
             if (json.startsWith("[")) {
                 JSONArray jsonArray = new JSONArray(json);
-                String message = jsonArray.toString(JSON_INDENT);
-                return message;
+                return jsonArray.toString(JSON_INDENT);
             }
-            json = ERROR_FORMAT;
+            return ERROR_FORMAT;
         } catch (JSONException e) {
-            json = ERROR_FORMAT;
+            error(this.getClass().getSimpleName(), e);
+            return ERROR_FORMAT;
         }
-
-        return json;
     }
 }

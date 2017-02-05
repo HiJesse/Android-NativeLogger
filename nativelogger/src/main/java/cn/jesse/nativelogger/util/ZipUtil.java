@@ -39,7 +39,7 @@ public class ZipUtil {
             if (!subFile[iFileLength].isDirectory()) {
                 File item = subFile[iFileLength];
 
-                long expired = expiredPeriod * 24 * 60 * 60 * 1000;
+                long expired = expiredPeriod * 24 * 60 * 60 * 1000L;
                 if (System.currentTimeMillis() - item.lastModified() > expired)
                     item.delete();
 
@@ -62,7 +62,7 @@ public class ZipUtil {
      */
     public static boolean zipFiles(Collection<File> resFileList, File zipFile, String comment)
             throws IOException {
-        if (null == resFileList || resFileList.size() == 0)
+        if (null == resFileList || resFileList.isEmpty())
             return false;
 
         ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(
@@ -80,31 +80,31 @@ public class ZipUtil {
      * zip file
      *
      * @param resFile zip from file
-     * @param zipout zip to file
+     * @param zipOut zip to file
      * @param rootPath target file path
      */
-    private static void zipFile(File resFile, ZipOutputStream zipout, String rootPath)
+    private static void zipFile(File resFile, ZipOutputStream zipOut, String rootPath)
             throws IOException {
-        rootPath = rootPath + (rootPath.trim().length() == 0 ? "" : File.separator)
+        String filePath = rootPath + (rootPath.trim().length() == 0 ? "" : File.separator)
                 + resFile.getName();
-        rootPath = new String(rootPath.getBytes("8859_1"), "GB2312");
+        filePath = new String(filePath.getBytes("8859_1"), "GB2312");
         if (resFile.isDirectory()) {
             File[] fileList = resFile.listFiles();
             for (File file : fileList) {
-                zipFile(file, zipout, rootPath);
+                zipFile(file, zipOut, filePath);
             }
         } else {
             byte buffer[] = new byte[BUFF_SIZE];
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(resFile),
                     BUFF_SIZE);
-            zipout.putNextEntry(new ZipEntry(rootPath));
+            zipOut.putNextEntry(new ZipEntry(filePath));
             int realLength;
             while ((realLength = in.read(buffer)) != -1) {
-                zipout.write(buffer, 0, realLength);
+                zipOut.write(buffer, 0, realLength);
             }
             in.close();
-            zipout.flush();
-            zipout.closeEntry();
+            zipOut.flush();
+            zipOut.closeEntry();
         }
     }
 }

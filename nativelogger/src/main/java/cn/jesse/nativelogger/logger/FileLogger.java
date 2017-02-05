@@ -21,7 +21,7 @@ import cn.jesse.nativelogger.util.ZipUtil;
  * Created by jesse on 9/6/16.
  */
 public class FileLogger extends AbstractLogger implements IFileLogger{
-    final transient Logger logger;
+    final Logger logger;
     private String logDir;
     private Formatter formatter;
     private int expiredPeriod;
@@ -59,6 +59,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
             logger.addHandler(fh);
         } catch (IOException e) {
             //unused
+            error(this.getClass().getSimpleName(), e);
         }
         handler.post(new Runnable() {
             @Override
@@ -97,7 +98,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
                     result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
                             zipFile, DateUtil.getCurrentDate());
                 } catch (Exception e) {
-                    error(tag, e.getCause());
+                    error(tag, e);
                 }
                 if (null != listener)
                     listener.onZip(result, targetZipFileName);
