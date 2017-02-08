@@ -93,8 +93,8 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
                 String targetZipFileName = logDir + DateUtil.getCurrentDate() + ZipUtil.SUFFIX_ZIP;
                 try {
                     File zipFile = new File(targetZipFileName);
-                    if (zipFile.exists())
-                        zipFile.delete();
+                    if (zipFile.exists() && !zipFile.delete())
+                        error(tag, "can not delete exist zip file!");
                     result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
                             zipFile, DateUtil.getCurrentDate());
                 } catch (Exception e) {

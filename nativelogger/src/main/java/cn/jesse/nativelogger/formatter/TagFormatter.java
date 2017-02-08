@@ -1,5 +1,7 @@
 package cn.jesse.nativelogger.formatter;
 
+import android.util.Log;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -14,6 +16,7 @@ public class TagFormatter {
         try {
             result = String.format("%s : %s", subTag, msg);
         } catch (Exception e){
+            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
             result = RESULT_UNEXPECTED_FORMAT;
         }
         return result;
@@ -21,9 +24,11 @@ public class TagFormatter {
 
     public static String format(String subTag, String format, Object arg) {
         String result;
+        String finalFormat = "%s : " + format;
         try {
-            result = String.format("%s : " + format, subTag, arg);
+            result = String.format(finalFormat, subTag, arg);
         } catch (Exception e){
+            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
             result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;
@@ -31,9 +36,11 @@ public class TagFormatter {
 
     public static String format(String subTag, String format, Object argA, Object argB) {
         String result;
+        String finalFormat = "%s : " + format;
         try {
-            result = String.format("%s : " + format, subTag, argA, argB);
+            result = String.format(finalFormat, subTag, argA, argB);
         } catch (Exception e){
+            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
             result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;
@@ -44,6 +51,7 @@ public class TagFormatter {
         try {
             result = String.format("%s : %s", subTag, String.format(format, args));
         } catch (Exception e){
+            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
             result = RESULT_UNEXPECTED_FORMAT + " with " + format;
         }
         return result;

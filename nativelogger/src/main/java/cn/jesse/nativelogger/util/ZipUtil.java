@@ -13,6 +13,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import cn.jesse.nativelogger.NLogger;
+
 /**
  * Created by jesse on 9/8/16.
  */
@@ -40,8 +42,8 @@ public class ZipUtil {
                 File item = subFile[iFileLength];
 
                 long expired = expiredPeriod * 24 * 60 * 60 * 1000L;
-                if (System.currentTimeMillis() - item.lastModified() > expired)
-                    item.delete();
+                if ((System.currentTimeMillis() - item.lastModified() > expired) && !item.delete())
+                    NLogger.e("can not delete expired file " + item.getName());
 
                 if (item.getName().endsWith(SUFFIX_LOCK) ||
                         item.getName().endsWith(SUFFIX_ZIP))

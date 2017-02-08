@@ -15,8 +15,6 @@ buildscript {
     }
 }
 
-apply plugin: "org.sonarqube"
-
 allprojects {
     repositories {
         jcenter()
@@ -25,4 +23,12 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+apply plugin: "org.sonarqube"
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "NLogger"
+    }
 }
