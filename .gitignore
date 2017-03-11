@@ -11,6 +11,8 @@ gradle.properties
 
 #Check
 /infer-out
+.sonar
+sonar-project.properties
 
 #Eclipse
 .project

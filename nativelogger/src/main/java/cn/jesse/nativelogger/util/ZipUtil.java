@@ -23,6 +23,10 @@ public class ZipUtil {
     private static final String SUFFIX_LOCK = ".lck";
     public static final String SUFFIX_ZIP = ".zip";
 
+    private ZipUtil() {
+        //unused
+    }
+
     /**
      * get suitable files from path depend on pack num ,clear redundant files
      *

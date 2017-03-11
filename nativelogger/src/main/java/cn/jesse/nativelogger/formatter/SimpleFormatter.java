@@ -17,6 +17,7 @@ public class SimpleFormatter extends Formatter {
 
 
     public SimpleFormatter() {
+        //unused
     }
 
     /**

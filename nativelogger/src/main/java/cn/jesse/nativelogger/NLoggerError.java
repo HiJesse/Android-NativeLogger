@@ -6,6 +6,7 @@ package cn.jesse.nativelogger;
 
 public class NLoggerError extends Error {
     public NLoggerError() {
+        //unused
     }
 
     /**

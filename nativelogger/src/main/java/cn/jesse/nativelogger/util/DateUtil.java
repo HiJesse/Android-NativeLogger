@@ -8,6 +8,10 @@ import java.text.SimpleDateFormat;
 public class DateUtil {
     private static final String TEMPLATE_DATE = "yyyy-MM-dd";
 
+    private DateUtil() {
+        //unused
+    }
+
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat(TEMPLATE_DATE);
         return sdf.format(System.currentTimeMillis());

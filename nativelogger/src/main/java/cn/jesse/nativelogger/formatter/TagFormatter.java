@@ -2,14 +2,23 @@ package cn.jesse.nativelogger.formatter;
 
 import android.util.Log;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import cn.jesse.nativelogger.NLogger;
 
 /**
  * Created by jesse on 9/7/16.
  */
 public class TagFormatter {
     private static final String RESULT_UNEXPECTED_FORMAT = "unexpected format";
+    private static final String WITH = " with ";
+
+    private TagFormatter() {
+        //unused
+    }
 
     public static String format(String subTag, String msg) {
         String result;
@@ -29,7 +38,7 @@ public class TagFormatter {
             result = String.format(finalFormat, subTag, arg);
         } catch (Exception e){
             Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
+            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
         }
         return result;
     }
@@ -41,7 +50,7 @@ public class TagFormatter {
             result = String.format(finalFormat, subTag, argA, argB);
         } catch (Exception e){
             Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
+            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
         }
         return result;
     }
@@ -52,7 +61,7 @@ public class TagFormatter {
             result = String.format("%s : %s", subTag, String.format(format, args));
         } catch (Exception e){
             Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + " with " + format;
+            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
         }
         return result;
     }
@@ -69,8 +78,9 @@ public class TagFormatter {
             t.printStackTrace(pw);
             result = sw.toString();
         } finally {
-            if (null != pw)
+            if (null != pw) {
                 pw.close();
+            }
         }
         return result;
     }
