@@ -33,7 +33,7 @@ public class NLogger extends AbstractNativeLogger{
      * get instance
      * @return
      */
-    public synchronized static NLogger getInstance() {
+    public static synchronized NLogger getInstance() {
         if (mInstance == null) {
             synchronized (NLogger.class) {
                 if (mInstance == null) {

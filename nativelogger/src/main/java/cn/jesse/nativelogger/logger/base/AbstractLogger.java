@@ -12,9 +12,9 @@ import cn.jesse.nativelogger.logger.LoggerLevel;
  */
 public abstract class AbstractLogger implements ILogger{
     protected String tag;
-    private final String ERROR_FORMAT = "unexpected format";
-    private final String ERROR_LEVEL = "unexpected LoggerLevel";
-    private final int JSON_INDENT = 2;
+    private static final String ERROR_FORMAT = "unexpected format";
+    private static final String ERROR_LEVEL = "unexpected LoggerLevel";
+    private static final int JSON_INDENT = 2;
 
     protected AbstractLogger(String tag) {
         if (tag == null) {

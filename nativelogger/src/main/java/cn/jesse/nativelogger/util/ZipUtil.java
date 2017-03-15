@@ -100,7 +100,7 @@ public class ZipUtil {
                 zipFile(file, zipOut, filePath);
             }
         } else {
-            byte buffer[] = new byte[BUFF_SIZE];
+            byte[] buffer = new byte[BUFF_SIZE];
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(resFile),
                     BUFF_SIZE);
             zipOut.putNextEntry(new ZipEntry(filePath));

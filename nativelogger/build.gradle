@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-//apply from: 'deploy.gradle'
+//apply from: '../deploy.gradle'
 
 android {
     compileSdkVersion 23
@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "2.0.0"
     }
     buildTypes {
         release {

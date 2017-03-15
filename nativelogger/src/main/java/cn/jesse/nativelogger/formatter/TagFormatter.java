@@ -2,12 +2,10 @@ package cn.jesse.nativelogger.formatter;
 
 import android.util.Log;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.util.CloseUtil;
 
 /**
  * Created by jesse on 9/7/16.
@@ -78,9 +76,7 @@ public class TagFormatter {
             t.printStackTrace(pw);
             result = sw.toString();
         } finally {
-            if (null != pw) {
-                pw.close();
-            }
+            CloseUtil.close(pw);
         }
         return result;
     }
