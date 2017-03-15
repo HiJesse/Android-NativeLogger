@@ -1,8 +1,8 @@
-#Android-NativeLogger
+# Android-NativeLogger
 
 NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开发者统一管理不同Level的log, 将其输出到Console或者文件(/天)中.后续将继续完善.
 
-##功能清单
+## 功能清单
 
 |状态|功能|默认|
 |:-:|:-:|:-:|
@@ -21,7 +21,7 @@ NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png) : 已完成
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png) : 待完成
 
-##Gradle引入
+## Gradle引入
 
 根项目`build.gradle`中引入mavenCentral.
 
@@ -42,7 +42,8 @@ dependencies {
 }
 ```
 
-##如何使用
+## 如何使用
+
 * 注解配置
 
 ```
