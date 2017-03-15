@@ -21,21 +21,24 @@ NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png) : 已完成
 ![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png) : 待完成
 
-##如何引入
+##Gradle引入
 
-Gradle
-
+根项目`build.gradle`中引入mavenCentral.
 
 ```
-repositories {
-    jcenter()
-    maven { url "https://raw.githubusercontent.com/HiJesse/mvn/master/repository/" }
+allprojects {
+    repositories {
+        ...
+        mavenCentral()
+    }
 }
 ```
 
+Module`build.gradle`中引入NLogger.
+
 ```
 dependencies {
-    compile "cn.jesse.android:nativelogger:1.2.0"
+    compile 'com.github.hijesse:android-logger:2.0.0'
 }
 ```
 
