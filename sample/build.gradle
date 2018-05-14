@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion  rootProject.ext.build['compileSdkVersion']
@@ -24,4 +25,5 @@ dependencies {
     testCompile rootProject.ext.dep['junit']
     compile rootProject.ext.dep['support-v7']
     compile project(':nativelogger')
+    compile rootProject.ext.dep['kotlinLib']
 }
