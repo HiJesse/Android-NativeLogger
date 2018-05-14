@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "24.0.1"
+    compileSdkVersion  rootProject.ext.build['compileSdkVersion']
+    buildToolsVersion  rootProject.ext.build['buildToolsVersion']
 
     defaultConfig {
         applicationId "cn.jesse.nativeloggersample"
-        minSdkVersion 9
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion  rootProject.ext.build['minSdkVersion']
+        targetSdkVersion  rootProject.ext.build['targetSdkVersion']
+        versionCode  rootProject.ext.build['versionCode']
+        versionName rootProject.ext.build['versionName']
     }
     buildTypes {
         release {
@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    testCompile rootProject.ext.dep['junit']
+    compile rootProject.ext.dep['support-v7']
     compile project(':nativelogger')
 }
