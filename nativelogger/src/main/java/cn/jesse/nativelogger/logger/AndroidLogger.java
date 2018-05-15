@@ -61,42 +61,42 @@ public class AndroidLogger extends AbstractLogger {
     public void debug(String msg) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, msg);
+        Log.d(tag(), msg);
     }
 
     @Override
     public void debug(String subTag, String msg) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, TagFormatter.format(subTag, msg));
+        Log.d(tag(), TagFormatter.format(subTag, msg));
     }
 
     @Override
     public void debug(String subTag, String format, Object arg) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, TagFormatter.format(subTag, format, arg));
+        Log.d(tag(), TagFormatter.format(subTag, format, arg));
     }
 
     @Override
     public void debug(String subTag, String format, Object argA, Object argB) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, TagFormatter.format(subTag, format, argA, argB));
+        Log.d(tag(), TagFormatter.format(subTag, format, argA, argB));
     }
 
     @Override
     public void debug(String subTag, String format, Object... arguments) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, TagFormatter.format(subTag, format, arguments));
+        Log.d(tag(), TagFormatter.format(subTag, format, arguments));
     }
 
     @Override
     public void debug(String subTag, Throwable t) {
         if (!isDebugEnabled())
             return;
-        Log.d(tag, subTag + " " + TagFormatter.format(t));
+        Log.d(tag(), subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -108,42 +108,42 @@ public class AndroidLogger extends AbstractLogger {
     public void info(String msg) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, msg);
+        Log.i(tag(), msg);
     }
 
     @Override
     public void info(String subTag, String msg) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, TagFormatter.format(subTag, msg));
+        Log.i(tag(), TagFormatter.format(subTag, msg));
     }
 
     @Override
     public void info(String subTag, String format, Object arg) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, TagFormatter.format(subTag, format, arg));
+        Log.i(tag(), TagFormatter.format(subTag, format, arg));
     }
 
     @Override
     public void info(String subTag, String format, Object argA, Object argB) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, TagFormatter.format(subTag, format, argA, argB));
+        Log.i(tag(), TagFormatter.format(subTag, format, argA, argB));
     }
 
     @Override
     public void info(String subTag, String format, Object... arguments) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, TagFormatter.format(subTag, format, arguments));
+        Log.i(tag(), TagFormatter.format(subTag, format, arguments));
     }
 
     @Override
     public void info(String subTag, Throwable t) {
         if (!isInfoEnabled())
             return;
-        Log.i(tag, subTag + " " + TagFormatter.format(t));
+        Log.i(tag(), subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -155,42 +155,42 @@ public class AndroidLogger extends AbstractLogger {
     public void warn(String msg) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, msg);
+        Log.w(tag(), msg);
     }
 
     @Override
     public void warn(String subTag, String msg) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, TagFormatter.format(subTag, msg));
+        Log.w(tag(), TagFormatter.format(subTag, msg));
     }
 
     @Override
     public void warn(String subTag, String format, Object arg) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, TagFormatter.format(subTag, format, arg));
+        Log.w(tag(), TagFormatter.format(subTag, format, arg));
     }
 
     @Override
     public void warn(String subTag, String format, Object... arguments) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, TagFormatter.format(subTag, format, arguments));
+        Log.w(tag(), TagFormatter.format(subTag, format, arguments));
     }
 
     @Override
     public void warn(String subTag, String format, Object argA, Object argB) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, TagFormatter.format(subTag, format, argA, argB));
+        Log.w(tag(), TagFormatter.format(subTag, format, argA, argB));
     }
 
     @Override
     public void warn(String subTag, Throwable t) {
         if (!isWarnEnabled())
             return;
-        Log.w(tag, subTag + " " + TagFormatter.format(t));
+        Log.w(tag(), subTag + " " + TagFormatter.format(t));
     }
 
     @Override
@@ -202,41 +202,41 @@ public class AndroidLogger extends AbstractLogger {
     public void error(String msg) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, msg);
+        Log.e(tag(), msg);
     }
 
     @Override
     public void error(String subTag, String msg) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, TagFormatter.format(subTag, msg));
+        Log.e(tag(), TagFormatter.format(subTag, msg));
     }
 
     @Override
     public void error(String subTag, String format, Object arg) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, TagFormatter.format(subTag, format, arg));
+        Log.e(tag(), TagFormatter.format(subTag, format, arg));
     }
 
     @Override
     public void error(String subTag, String format, Object argA, Object argB) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, TagFormatter.format(subTag, format, argA, argB));
+        Log.e(tag(), TagFormatter.format(subTag, format, argA, argB));
     }
 
     @Override
     public void error(String subTag, String format, Object... arguments) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, TagFormatter.format(subTag, format, arguments));
+        Log.e(tag(), TagFormatter.format(subTag, format, arguments));
     }
 
     @Override
     public void error(String subTag, Throwable t) {
         if (!isErrorEnabled())
             return;
-        Log.e(tag, subTag + " " + TagFormatter.format(t));
+        Log.e(tag(), subTag + " " + TagFormatter.format(t));
     }
 }

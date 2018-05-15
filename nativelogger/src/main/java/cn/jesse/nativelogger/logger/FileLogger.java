@@ -94,11 +94,11 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
                 try {
                     File zipFile = new File(targetZipFileName);
                     if (zipFile.exists() && !zipFile.delete())
-                        error(tag, "can not delete exist zip file!");
+                        error(tag(), "can not delete exist zip file!");
                     result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
                             zipFile, DateUtil.getCurrentDate());
                 } catch (Exception e) {
-                    error(tag, e);
+                    error(tag(), e);
                 }
                 if (null != listener)
                     listener.onZip(result, targetZipFileName);
@@ -122,7 +122,7 @@ public class FileLogger extends AbstractLogger implements IFileLogger{
 
     private synchronized void log(Level level, String msg, Throwable t) {
         LogRecord record = new LogRecord(level, msg);
-        record.setLoggerName(tag);
+        record.setLoggerName(tag());
         record.setThrown(t);
         logger.log(record);
     }

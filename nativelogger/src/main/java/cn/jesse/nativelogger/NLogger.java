@@ -140,7 +140,7 @@ public class NLogger extends AbstractNativeLogger{
      *
      */
     @Override
-    ILogger getDefaultLogger() {
+    public ILogger getDefaultLogger() {
         return this.defaultLogger;
     }
 
@@ -149,7 +149,7 @@ public class NLogger extends AbstractNativeLogger{
      *
      */
     @Override
-    ILogger getFileLogger() {
+    public ILogger getFileLogger() {
         return this.fileLogger;
     }
 
