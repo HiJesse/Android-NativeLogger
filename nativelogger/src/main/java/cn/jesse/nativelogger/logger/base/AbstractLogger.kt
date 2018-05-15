@@ -13,9 +13,6 @@ import org.json.JSONObject
  */
 abstract class AbstractLogger(tag: String) : ILogger {
     protected open var mTag: String = "AbstractLogger"
-    private val ERROR_FORMAT = "unexpected format"
-    private val ERROR_LEVEL = "unexpected LoggerLevel"
-    private val JSON_INDENT = 2
 
     init {
         mTag = tag
@@ -165,5 +162,11 @@ abstract class AbstractLogger(tag: String) : ILogger {
             return ERROR_FORMAT
         }
 
+    }
+
+    companion object {
+        private val ERROR_FORMAT = "unexpected format"
+        private val ERROR_LEVEL = "unexpected LoggerLevel"
+        private val JSON_INDENT = 2
     }
 }
