@@ -1,83 +1,95 @@
-package cn.jesse.nativelogger.formatter;
+package cn.jesse.nativelogger.formatter
 
-import android.util.Log;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import cn.jesse.nativelogger.util.CloseUtil;
+import android.util.Log
+import cn.jesse.nativelogger.util.CloseUtil
+import java.io.PrintWriter
+import java.io.StringWriter
 
 /**
- * Created by jesse on 9/7/16.
+ * 各种格式化日志工具
+ *
+ * @author Jesse
  */
-public class TagFormatter {
-    private static final String RESULT_UNEXPECTED_FORMAT = "unexpected format";
-    private static final String WITH = " with ";
+object TagFormatter {
+    private val RESULT_UNEXPECTED_FORMAT = "unexpected format"
+    private val WITH = " with "
 
-    private TagFormatter() {
-        //unused
+    /**
+     * 按照 %s : %s格式化日志
+     *
+     * @param subTag 子Tag
+     * @param msg 日志信息
+     */
+    fun format(subTag: String, msg: String) = try {
+        String.format("%s : %s", subTag, msg)
+    } catch (e: Exception) {
+        Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e)
+        RESULT_UNEXPECTED_FORMAT
     }
 
-    public static String format(String subTag, String msg) {
-        String result;
-        try {
-            result = String.format("%s : %s", subTag, msg);
-        } catch (Exception e){
-            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT;
+    /**
+     * 扩展日志格式 %s $子格式
+     * @param subTag 子Tag
+     * @param format 子格式
+     * @param arg 被子格式格式的对象
+     */
+    fun format(subTag: String, format: String, arg: Any) = try {
+        String.format("%s : $format", subTag, arg)
+    } catch (e: Exception) {
+        Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e)
+        RESULT_UNEXPECTED_FORMAT + WITH + format
+    }
+
+    /**
+     * 扩展日志格式 %s $子格式
+     * @param subTag 子Tag
+     * @param format 子格式
+     * @param argA 被子格式格式的对象A
+     * @param argB 被子格式格式的对象B
+     */
+    fun format(subTag: String, format: String, argA: Any, argB: Any) = try {
+        String.format("%s : $format", subTag, argA, argB)
+    } catch (e: Exception) {
+        Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e)
+        RESULT_UNEXPECTED_FORMAT + WITH + format
+    }
+
+    /**
+     * 扩展日志格式 %s $子格式
+     * @param subTag 子Tag
+     * @param format 子格式
+     * @param args 可变参数组
+     */
+    fun format(subTag: String, format: String, vararg args: Any) = try {
+        String.format("%s : %s", subTag, String.format(format, *args))
+    } catch (e: Exception) {
+        Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e)
+        RESULT_UNEXPECTED_FORMAT + WITH + format
+    }
+
+    /**
+     * 格式化异常信息
+     *
+     * @param t 异常
+     */
+    fun format(t: Throwable?): String {
+        var result = ""
+
+        if (null == t) {
+            return result
         }
-        return result;
-    }
 
-    public static String format(String subTag, String format, Object arg) {
-        String result;
-        String finalFormat = "%s : " + format;
+        var pw: PrintWriter? = null
+
         try {
-            result = String.format(finalFormat, subTag, arg);
-        } catch (Exception e){
-            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
-        }
-        return result;
-    }
-
-    public static String format(String subTag, String format, Object argA, Object argB) {
-        String result;
-        String finalFormat = "%s : " + format;
-        try {
-            result = String.format(finalFormat, subTag, argA, argB);
-        } catch (Exception e){
-            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
-        }
-        return result;
-    }
-
-    public static String format(String subTag, String format, Object... args) {
-        String result;
-        try {
-            result = String.format("%s : %s", subTag, String.format(format, args));
-        } catch (Exception e){
-            Log.e(subTag, RESULT_UNEXPECTED_FORMAT, e);
-            result = RESULT_UNEXPECTED_FORMAT + WITH + format;
-        }
-        return result;
-    }
-
-    public static String format(Throwable t) {
-        String result = "";
-        if (null == t)
-            return result;
-
-        PrintWriter pw = null;
-        try {
-            StringWriter sw = new StringWriter();
-            pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
-            result = sw.toString();
+            val sw = StringWriter()
+            pw = PrintWriter(sw)
+            t.printStackTrace(pw)
+            result = sw.toString()
         } finally {
-            CloseUtil.close(pw);
+            CloseUtil.close(pw)
         }
-        return result;
+
+        return result
     }
 }
