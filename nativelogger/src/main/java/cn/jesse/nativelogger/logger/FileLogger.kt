@@ -1,420 +1,316 @@
-package cn.jesse.nativelogger.logger;
+package cn.jesse.nativelogger.logger
 
-import android.os.Handler;
-import android.os.HandlerThread;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
-import cn.jesse.nativelogger.formatter.TagFormatter;
-import cn.jesse.nativelogger.logger.base.AbstractLogger;
-import cn.jesse.nativelogger.logger.base.IFileLogger;
-import cn.jesse.nativelogger.util.DateUtil;
-import cn.jesse.nativelogger.util.ZipUtil;
+import android.os.Handler
+import android.os.HandlerThread
+import cn.jesse.nativelogger.formatter.TagFormatter
+import cn.jesse.nativelogger.logger.base.AbstractLogger
+import cn.jesse.nativelogger.logger.base.IFileLogger
+import cn.jesse.nativelogger.util.DateUtil
+import cn.jesse.nativelogger.util.ZipUtil
+import java.io.File
+import java.io.IOException
+import java.util.logging.*
 
 /**
- * Created by jesse on 9/6/16.
+ * 文件日志管理器实现
  */
-public class FileLogger extends AbstractLogger implements IFileLogger{
-    final Logger logger;
-    private String logDir;
-    private Formatter formatter;
-    private int expiredPeriod;
+class FileLogger(tag: String) : AbstractLogger(tag), IFileLogger {
+    internal val logger: Logger
+    private lateinit var logDir: String
+    private lateinit var formatter: Formatter
+    private var expiredPeriod: Int = 0
 
-    private HandlerThread fileLoggerThread;
-    private Handler handler;
+    private var handler: Handler
 
-    public FileLogger(String tag) {
-        super(tag);
+    init {
+        val fileLoggerThread = HandlerThread(FileLogger::class.java.simpleName)
+        fileLoggerThread.start()
+        handler = Handler(fileLoggerThread.looper)
 
-        fileLoggerThread = new HandlerThread(FileLogger.class.getSimpleName());
-        fileLoggerThread.start();
-        handler = new Handler(fileLoggerThread.getLooper());
-
-        this.logger = Logger.getLogger(tag);
-        logger.setUseParentHandlers(false);
+        this.logger = Logger.getLogger(tag)
+        logger.useParentHandlers = false
     }
 
 
-    @Override
-    public void setFilePathAndFormatter(final String dir, Formatter formatter, final int expiredPeriod) {
-        this.logDir = dir;
-        this.formatter = formatter;
-        this.expiredPeriod = expiredPeriod;
+    override fun setFilePathAndFormatter(dir: String, formatter: Formatter, expiredPeriod: Int) {
+        this.logDir = dir
+        this.formatter = formatter
+        this.expiredPeriod = expiredPeriod
 
         if (!logDir.endsWith("/"))
-            logDir += "/";
+            logDir += "/"
 
-        File file = new File(logDir + DateUtil.getCurrentDate());
-        FileHandler fh;
+        val file = File(logDir + DateUtil.getCurrentDate())
+        val fh: FileHandler
         try {
-            fh = new FileHandler(file.toString(), true);
-            fh.setFormatter(formatter);
+            fh = FileHandler(file.toString(), true)
+            fh.formatter = formatter
 
-            logger.addHandler(fh);
-        } catch (IOException e) {
+            logger.addHandler(fh)
+        } catch (e: IOException) {
             //unused
-            error(this.getClass().getSimpleName(), e);
+            error(this.javaClass.simpleName, e)
         }
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                ZipUtil.getSuitableFilesWithClear(dir, expiredPeriod);
-            }
-        });
+
+        handler.post { ZipUtil.getSuitableFilesWithClear(dir, expiredPeriod) }
     }
 
-    @Override
-    public String logDirectory() {
-        return this.logDir;
+    override fun logDirectory(): String {
+        return this.logDir
     }
 
-    @Override
-    public Formatter fileFormatter() {
-        return this.formatter;
+    override fun fileFormatter(): Formatter {
+        return this.formatter
     }
 
-    @Override
-    public int expiredPeriod() {
-        return this.expiredPeriod;
+    override fun expiredPeriod(): Int {
+        return this.expiredPeriod
     }
 
-    @Override
-    public void zipLogs(final OnZipListener listener) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                boolean result = false;
-                String targetZipFileName = logDir + DateUtil.getCurrentDate() + ZipUtil.SUFFIX_ZIP;
-                try {
-                    File zipFile = new File(targetZipFileName);
-                    if (zipFile.exists() && !zipFile.delete())
-                        error(tag(), "can not delete exist zip file!");
-                    result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
-                            zipFile, DateUtil.getCurrentDate());
-                } catch (Exception e) {
-                    error(tag(), e);
+    override fun zipLogs(listener: IFileLogger.OnZipListener) {
+        handler.post {
+            var result = false
+            val targetZipFileName = logDir + DateUtil.getCurrentDate() + ZipUtil.SUFFIX_ZIP
+            try {
+                val zipFile = File(targetZipFileName)
+                if (zipFile.exists() && !zipFile.delete()) {
+                    error(tag(), "can not delete exist zip file!")
                 }
-                if (null != listener)
-                    listener.onZip(result, targetZipFileName);
+                result = ZipUtil.zipFiles(ZipUtil.getSuitableFilesWithClear(logDir, expiredPeriod),
+                        zipFile, DateUtil.getCurrentDate())
+            } catch (e: Exception) {
+                error(tag(), e)
             }
-        });
+
+            listener.onZip(result, targetZipFileName)
+        }
     }
 
-    @Override
-    public void setLevel(LoggerLevel level) {
-        if (LoggerLevel.DEBUG == level)
-            logger.setLevel(Level.FINE);
-        else if (LoggerLevel.INFO == level)
-            logger.setLevel(Level.INFO);
-        else if (LoggerLevel.WARN == level)
-            logger.setLevel(Level.WARNING);
-        else if (LoggerLevel.ERROR == level)
-            logger.setLevel(Level.SEVERE);
-        else if (LoggerLevel.OFF == level)
-            logger.setLevel(Level.OFF);
+    override fun setLevel(level: LoggerLevel) {
+        when (level) {
+            LoggerLevel.OFF -> logger.level = Level.OFF
+            LoggerLevel.ERROR -> logger.level = Level.SEVERE
+            LoggerLevel.WARN -> logger.level = Level.WARNING
+            LoggerLevel.INFO -> logger.level = Level.INFO
+            LoggerLevel.DEBUG -> logger.level = Level.FINE
+        }
     }
 
-    private synchronized void log(Level level, String msg, Throwable t) {
-        LogRecord record = new LogRecord(level, msg);
-        record.setLoggerName(tag());
-        record.setThrown(t);
-        logger.log(record);
+    @Synchronized
+    private fun log(level: Level, msg: String, t: Throwable?) {
+        val record = LogRecord(level, msg)
+        record.loggerName = tag()
+        record.thrown = t
+        logger.log(record)
     }
 
-    @Override
-    public boolean isDebugEnabled() {
-        return logger.isLoggable(Level.FINE);
+    override fun isDebugEnabled(): Boolean {
+        return logger.isLoggable(Level.FINE)
     }
 
-    @Override
-    public void debug(final String msg) {
-        if (!isDebugEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.FINE, msg, null);
-            }
-        });
+    override fun debug(msg: String) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.FINE, msg, null) }
     }
 
-    @Override
-    public void debug(final String subTag, final String msg) {
-        if (!isDebugEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.FINE, TagFormatter.format(subTag, msg), null);
-            }
-        });
+    override fun debug(subTag: String, msg: String) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.FINE, TagFormatter.format(subTag, msg), null) }
     }
 
-    @Override
-    public void debug(final String subTag, final String format, final Object arg) {
-        if (!isDebugEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.FINE, TagFormatter.format(subTag, format, arg), null);
-            }
-        });
+    override fun debug(subTag: String, format: String, arg: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.FINE, TagFormatter.format(subTag, format, arg), null) }
     }
 
-    @Override
-    public void debug(final String subTag, final String format, final Object argA, final Object argB) {
-        if (!isDebugEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.FINE, TagFormatter.format(subTag, format, argA, argB), null);
-            }
-        });
+    override fun debug(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.FINE, TagFormatter.format(subTag, format, argA, argB), null) }
     }
 
-    @Override
-    public void debug(final String subTag, final String format, final Object... arguments) {
-        if (!isDebugEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.FINE, TagFormatter.format(subTag, format, arguments), null);
-            }
-        });
+    override fun debug(subTag: String, format: String, vararg arguments: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.FINE, TagFormatter.format(subTag, format, *arguments), null) }
     }
 
-    @Override
-    public void debug(String subTag, Throwable t) {
-        if (!isDebugEnabled())
-            return;
-        log(Level.FINE, subTag, t);
+    override fun debug(subTag: String, t: Throwable) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        log(Level.FINE, subTag, t)
     }
 
-    @Override
-    public boolean isInfoEnabled() {
-        return logger.isLoggable(Level.INFO);
+    override fun isInfoEnabled(): Boolean {
+        return logger.isLoggable(Level.INFO)
     }
 
-    @Override
-    public void info(final String msg) {
-        if (!isInfoEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, msg, null);
-            }
-        });
+    override fun info(msg: String) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.INFO, msg, null) }
     }
 
-    @Override
-    public void info(final String subTag, final String msg) {
-        if (!isInfoEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, TagFormatter.format(subTag, msg), null);
-            }
-        });
+    override fun info(subTag: String, msg: String) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.INFO, TagFormatter.format(subTag, msg), null) }
     }
 
-    @Override
-    public void info(final String subTag, final String format, final Object arg) {
-        if (!isInfoEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, TagFormatter.format(subTag, format, arg), null);
-            }
-        });
+    override fun info(subTag: String, format: String, arg: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.INFO, TagFormatter.format(subTag, format, arg), null) }
     }
 
-    @Override
-    public void info(final String subTag, final String format, final Object argA, final Object argB) {
-        if (!isInfoEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, TagFormatter.format(subTag, format, argA, argB), null);
-            }
-        });
+    override fun info(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.INFO, TagFormatter.format(subTag, format, argA, argB), null) }
     }
 
-    @Override
-    public void info(final String subTag, final String format, final Object... arguments) {
-        if (!isInfoEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.INFO, TagFormatter.format(subTag, format, arguments), null);
-            }
-        });
+    override fun info(subTag: String, format: String, vararg arguments: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.INFO, TagFormatter.format(subTag, format, *arguments), null) }
     }
 
-    @Override
-    public void info(final String subTag, final Throwable t) {
-        if (!isInfoEnabled())
-            return;
-        log(Level.INFO, subTag, t);
+    override fun info(subTag: String, t: Throwable) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        log(Level.INFO, subTag, t)
     }
 
 
-    @Override
-    public boolean isWarnEnabled() {
-        return logger.isLoggable(Level.WARNING);
+    override fun isWarnEnabled(): Boolean {
+        return logger.isLoggable(Level.WARNING)
     }
 
-    @Override
-    public void warn(final String msg) {
-        if (!isWarnEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.WARNING, msg, null);
-            }
-        });
+    override fun warn(msg: String) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.WARNING, msg, null) }
     }
 
-    @Override
-    public void warn(final String subTag, final String msg) {
-        if (!isWarnEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.WARNING, TagFormatter.format(subTag, msg), null);
-            }
-        });
+    override fun warn(subTag: String, msg: String) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.WARNING, TagFormatter.format(subTag, msg), null) }
     }
 
-    @Override
-    public void warn(final String subTag, final String format, final Object arg) {
-        if (!isWarnEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.WARNING, TagFormatter.format(subTag, format, arg), null);
-            }
-        });
+    override fun warn(subTag: String, format: String, arg: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.WARNING, TagFormatter.format(subTag, format, arg), null) }
     }
 
-    @Override
-    public void warn(final String subTag, final String format, final Object... arguments) {
-        if (!isWarnEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.WARNING, TagFormatter.format(subTag, format, arguments), null);
-            }
-        });
+    override fun warn(subTag: String, format: String, vararg arguments: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.WARNING, TagFormatter.format(subTag, format, *arguments), null) }
     }
 
-    @Override
-    public void warn(final String subTag, final String format, final Object argA, final Object argB) {
-        if (!isWarnEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.WARNING, TagFormatter.format(subTag, format, argA, argB), null);
-            }
-        });
+    override fun warn(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.WARNING, TagFormatter.format(subTag, format, argA, argB), null) }
     }
 
-    @Override
-    public void warn(String subTag, Throwable t) {
-        if (!isWarnEnabled())
-            return;
-        log(Level.WARNING, subTag, t);
+    override fun warn(subTag: String, t: Throwable) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        log(Level.WARNING, subTag, t)
     }
 
 
-    @Override
-    public boolean isErrorEnabled() {
-        return logger.isLoggable(Level.SEVERE);
+    override fun isErrorEnabled(): Boolean {
+        return logger.isLoggable(Level.SEVERE)
     }
 
-    @Override
-    public void error(final String msg) {
-        if (!isErrorEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.SEVERE, msg, null);
-            }
-        });
+    override fun error(msg: String) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.SEVERE, msg, null) }
     }
 
-    @Override
-    public void error(final String subTag, final String msg) {
-        if (!isErrorEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.SEVERE, TagFormatter.format(subTag, msg), null);
-            }
-        });
+    override fun error(subTag: String, msg: String) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.SEVERE, TagFormatter.format(subTag, msg), null) }
     }
 
-    @Override
-    public void error(final String subTag, final String format, final Object arg) {
-        if (!isErrorEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.SEVERE, TagFormatter.format(subTag, format, arg), null);
-            }
-        });
+    override fun error(subTag: String, format: String, arg: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.SEVERE, TagFormatter.format(subTag, format, arg), null) }
     }
 
-    @Override
-    public void error(final String subTag, final String format, final Object argA, final Object argB) {
-        if (!isErrorEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.SEVERE, TagFormatter.format(subTag, format, argA, argB), null);
-            }
-        });
+    override fun error(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.SEVERE, TagFormatter.format(subTag, format, argA, argB), null) }
     }
 
-    @Override
-    public void error(final String subTag, final String format, final Object... arguments) {
-        if (!isErrorEnabled())
-            return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log(Level.SEVERE, TagFormatter.format(subTag, format, arguments), null);
-            }
-        });
+    override fun error(subTag: String, format: String, vararg arguments: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        handler.post { log(Level.SEVERE, TagFormatter.format(subTag, format, *arguments), null) }
     }
 
-    @Override
-    public void error(String subTag, Throwable t) {
-        if (!isErrorEnabled())
-            return;
-        log(Level.SEVERE, subTag, t);
-    }
+    override fun error(subTag: String, t: Throwable) {
+        if (!isErrorEnabled()) {
+            return
+        }
 
+        log(Level.SEVERE, subTag, t)
+    }
 }
