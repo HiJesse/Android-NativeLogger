@@ -1,242 +1,251 @@
-package cn.jesse.nativelogger.logger;
+package cn.jesse.nativelogger.logger
 
-import android.util.Log;
-
-import cn.jesse.nativelogger.formatter.TagFormatter;
-import cn.jesse.nativelogger.logger.base.AbstractLogger;
+import android.util.Log
+import cn.jesse.nativelogger.formatter.TagFormatter
+import cn.jesse.nativelogger.logger.base.AbstractLogger
 
 /**
- * Created by jesse on 9/6/16.
+ * Android 日志管理器实现
+ *
+ * @author Jesse
  */
-public class AndroidLogger extends AbstractLogger {
-    private boolean debugEnable = true;
-    private boolean infoEnable = true;
-    private boolean warningEnable = true;
-    private boolean errorEnable = true;
+class AndroidLogger(tag: String) : AbstractLogger(tag) {
+    private var debugEnable = true
+    private var infoEnable = true
+    private var warningEnable = true
+    private var errorEnable = true
 
-    public AndroidLogger(String tag) {
-        super(tag);
-    }
-
-    @Override
-    public void setLevel(LoggerLevel level) {
-        if (LoggerLevel.DEBUG == level) {
-            debugEnable = true;
-            infoEnable = true;
-            warningEnable = true;
-            errorEnable = true;
-        }
-        else if (LoggerLevel.INFO == level){
-            debugEnable = false;
-            infoEnable = true;
-            warningEnable = true;
-            errorEnable = true;
-        }
-        else if (LoggerLevel.WARN == level){
-            debugEnable = false;
-            infoEnable = false;
-            warningEnable = true;
-            errorEnable = true;
-        }
-        else if (LoggerLevel.ERROR == level){
-            debugEnable = false;
-            infoEnable = false;
-            warningEnable = false;
-            errorEnable = true;
-        }
-        else if (LoggerLevel.OFF == level){
-            debugEnable = false;
-            infoEnable = false;
-            warningEnable = false;
-            errorEnable = false;
+    override fun setLevel(level: LoggerLevel) {
+        when (level) {
+            LoggerLevel.DEBUG -> {
+                // default
+            }
+            LoggerLevel.INFO -> {
+                debugEnable = false
+            }
+            LoggerLevel.WARN -> {
+                debugEnable = false
+                infoEnable = false
+            }
+            LoggerLevel.ERROR -> {
+                debugEnable = false
+                infoEnable = false
+                warningEnable = false
+            }
+            LoggerLevel.OFF -> {
+                debugEnable = false
+                infoEnable = false
+                warningEnable = false
+                errorEnable = false
+            }
         }
     }
 
-    @Override
-    public boolean isDebugEnabled() {
-        return debugEnable;
+    override fun isDebugEnabled(): Boolean {
+        return debugEnable
     }
 
-    @Override
-    public void debug(String msg) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), msg);
+    override fun debug(msg: String) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, msg)
     }
 
-    @Override
-    public void debug(String subTag, String msg) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), TagFormatter.format(subTag, msg));
+    override fun debug(subTag: String, msg: String) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, TagFormatter.format(subTag, msg))
     }
 
-    @Override
-    public void debug(String subTag, String format, Object arg) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), TagFormatter.format(subTag, format, arg));
+    override fun debug(subTag: String, format: String, arg: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, TagFormatter.format(subTag, format, arg))
     }
 
-    @Override
-    public void debug(String subTag, String format, Object argA, Object argB) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), TagFormatter.format(subTag, format, argA, argB));
+    override fun debug(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, TagFormatter.format(subTag, format, argA, argB))
     }
 
-    @Override
-    public void debug(String subTag, String format, Object... arguments) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), TagFormatter.format(subTag, format, arguments));
+    override fun debug(subTag: String, format: String, vararg arguments: Any) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, TagFormatter.format(subTag, format, *arguments))
     }
 
-    @Override
-    public void debug(String subTag, Throwable t) {
-        if (!isDebugEnabled())
-            return;
-        Log.d(tag(), subTag + " " + TagFormatter.format(t));
+    override fun debug(subTag: String, t: Throwable) {
+        if (!isDebugEnabled()) {
+            return
+        }
+
+        Log.d(mTag, subTag + " " + TagFormatter.format(t))
     }
 
-    @Override
-    public boolean isInfoEnabled() {
-        return infoEnable;
+    override fun isInfoEnabled(): Boolean {
+        return infoEnable
     }
 
-    @Override
-    public void info(String msg) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), msg);
+    override fun info(msg: String) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, msg)
     }
 
-    @Override
-    public void info(String subTag, String msg) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), TagFormatter.format(subTag, msg));
+    override fun info(subTag: String, msg: String) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, TagFormatter.format(subTag, msg))
     }
 
-    @Override
-    public void info(String subTag, String format, Object arg) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), TagFormatter.format(subTag, format, arg));
+    override fun info(subTag: String, format: String, arg: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, TagFormatter.format(subTag, format, arg))
     }
 
-    @Override
-    public void info(String subTag, String format, Object argA, Object argB) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), TagFormatter.format(subTag, format, argA, argB));
+    override fun info(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, TagFormatter.format(subTag, format, argA, argB))
     }
 
-    @Override
-    public void info(String subTag, String format, Object... arguments) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), TagFormatter.format(subTag, format, arguments));
+    override fun info(subTag: String, format: String, vararg arguments: Any) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, TagFormatter.format(subTag, format, *arguments))
     }
 
-    @Override
-    public void info(String subTag, Throwable t) {
-        if (!isInfoEnabled())
-            return;
-        Log.i(tag(), subTag + " " + TagFormatter.format(t));
+    override fun info(subTag: String, t: Throwable) {
+        if (!isInfoEnabled()) {
+            return
+        }
+
+        Log.i(mTag, subTag + " " + TagFormatter.format(t))
     }
 
-    @Override
-    public boolean isWarnEnabled() {
-        return warningEnable;
+    override fun isWarnEnabled(): Boolean {
+        return warningEnable
     }
 
-    @Override
-    public void warn(String msg) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), msg);
+    override fun warn(msg: String) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, msg)
     }
 
-    @Override
-    public void warn(String subTag, String msg) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), TagFormatter.format(subTag, msg));
+    override fun warn(subTag: String, msg: String) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, TagFormatter.format(subTag, msg))
     }
 
-    @Override
-    public void warn(String subTag, String format, Object arg) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), TagFormatter.format(subTag, format, arg));
+    override fun warn(subTag: String, format: String, arg: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, TagFormatter.format(subTag, format, arg))
     }
 
-    @Override
-    public void warn(String subTag, String format, Object... arguments) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), TagFormatter.format(subTag, format, arguments));
+    override fun warn(subTag: String, format: String, vararg arguments: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, TagFormatter.format(subTag, format, *arguments))
     }
 
-    @Override
-    public void warn(String subTag, String format, Object argA, Object argB) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), TagFormatter.format(subTag, format, argA, argB));
+    override fun warn(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, TagFormatter.format(subTag, format, argA, argB))
     }
 
-    @Override
-    public void warn(String subTag, Throwable t) {
-        if (!isWarnEnabled())
-            return;
-        Log.w(tag(), subTag + " " + TagFormatter.format(t));
+    override fun warn(subTag: String, t: Throwable) {
+        if (!isWarnEnabled()) {
+            return
+        }
+
+        Log.w(mTag, subTag + " " + TagFormatter.format(t))
     }
 
-    @Override
-    public boolean isErrorEnabled() {
-        return errorEnable;
+    override fun isErrorEnabled(): Boolean {
+        return errorEnable
     }
 
-    @Override
-    public void error(String msg) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), msg);
+    override fun error(msg: String) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, msg)
     }
 
-    @Override
-    public void error(String subTag, String msg) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), TagFormatter.format(subTag, msg));
+    override fun error(subTag: String, msg: String) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, TagFormatter.format(subTag, msg))
     }
 
-    @Override
-    public void error(String subTag, String format, Object arg) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), TagFormatter.format(subTag, format, arg));
+    override fun error(subTag: String, format: String, arg: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, TagFormatter.format(subTag, format, arg))
     }
 
-    @Override
-    public void error(String subTag, String format, Object argA, Object argB) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), TagFormatter.format(subTag, format, argA, argB));
+    override fun error(subTag: String, format: String, argA: Any, argB: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, TagFormatter.format(subTag, format, argA, argB))
     }
 
-    @Override
-    public void error(String subTag, String format, Object... arguments) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), TagFormatter.format(subTag, format, arguments));
+    override fun error(subTag: String, format: String, vararg arguments: Any) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, TagFormatter.format(subTag, format, *arguments))
     }
 
-    @Override
-    public void error(String subTag, Throwable t) {
-        if (!isErrorEnabled())
-            return;
-        Log.e(tag(), subTag + " " + TagFormatter.format(t));
+    override fun error(subTag: String, t: Throwable) {
+        if (!isErrorEnabled()) {
+            return
+        }
+
+        Log.e(mTag, subTag + " " + TagFormatter.format(t))
     }
 }

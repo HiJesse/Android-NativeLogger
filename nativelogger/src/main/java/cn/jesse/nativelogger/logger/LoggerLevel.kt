@@ -1,9 +1,11 @@
-package cn.jesse.nativelogger.logger;
+package cn.jesse.nativelogger.logger
 
 /**
- * Created by jesse on 9/6/16.
+ * 日志等级 枚举
+ *
+ * @author Jesse
  */
-public enum  LoggerLevel {
+enum class LoggerLevel {
     DEBUG,
     INFO,
     WARN,
