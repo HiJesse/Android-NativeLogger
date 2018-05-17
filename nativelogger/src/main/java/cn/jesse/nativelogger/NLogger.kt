@@ -1,261 +1,312 @@
 package cn.jesse.nativelogger
 
-import android.os.Environment
-import android.text.TextUtils
-import cn.jesse.nativelogger.formatter.SimpleFormatter
-import cn.jesse.nativelogger.logger.AndroidLogger
-import cn.jesse.nativelogger.logger.FileLogger
 import cn.jesse.nativelogger.logger.LoggerLevel
 import cn.jesse.nativelogger.logger.base.IFileLogger
-import cn.jesse.nativelogger.logger.base.ILogger
-import cn.jesse.nativelogger.util.CrashWatcher
-import java.io.File
-import java.util.logging.Formatter
 
-class NLogger : AbstractNativeLogger() {
-    private val TAG = NLogger::class.java.simpleName
-    @Volatile
-    private var builder: Builder? = null
-    private val defaultLogger: ILogger = AndroidLogger(TAG)
-    @Volatile
-    private var fileLogger: ILogger? = null
+/**
+ * NLogger 静态工具类
+ *
+ * @author Jesse
+ */
+object NLogger {
 
     /**
-     * build builder to android logger & file logger & exception watcher
-     * @param builder
-     * @return
+     * 压缩日志文件
      */
-    @Synchronized
-    private fun build(builder: Builder): NLogger? {
-        if (builder.isCatchException) {
-            CrashWatcher.getInstance().init()
-            CrashWatcher.getInstance().setListener(builder.uncaughtExceptionListener)
+    @JvmStatic
+    fun zipLogs(listener: IFileLogger.OnZipListener) {
+        val fileLogger = NLoggerConfig.getInstance().getFileLogger() as IFileLogger ?
+
+        if (null == fileLogger) {
+            w("unexpected zip logs, file logger is null")
+            return
+        }
+        fileLogger.zipLogs(listener)
+    }
+
+    @JvmStatic
+    fun i(msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null) {
+            return
         } else {
-            CrashWatcher.getInstance().setListener(null)
-        }
-
-
-        defaultLogger.setTag(builder.tag)
-        defaultLogger.setLevel(builder.loggerLevel)
-
-        if (!builder.isFileLoggerEnable) {
-            fileLogger = null
-            return mInstance
-        }
-
-        if (fileLogger == null) {
-            fileLogger = FileLogger(builder.tag)
-
-
-        } else {
-            fileLogger!!.setTag(builder.tag)
-        }
-
-        fileLogger!!.setLevel(builder.loggerLevel)
-        val iFileLogger = fileLogger as IFileLogger?
-        iFileLogger!!.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.expiredPeriod)
-
-        return mInstance
-    }
-
-    /**
-     * instance builder
-     * @return
-     */
-    fun builder(): Builder {
-        if (builder == null) {
-            synchronized(NLogger::class.java) {
-                if (builder == null) {
-                    builder = Builder()
-                }
-            }
-        }
-        return builder!!
-    }
-
-    /**
-     * get android logger
-     *
-     */
-    override fun getDefaultLogger(): ILogger {
-        return this.defaultLogger
-    }
-
-    /**
-     * get file logger
-     *
-     */
-    override fun getFileLogger(): ILogger? {
-        return this.fileLogger
-    }
-
-    companion object {
-        @Volatile
-        private var mInstance: NLogger? = null
-
-        /**
-         * get instance
-         * @return
-         */
-        @JvmStatic
-        fun getInstance(): NLogger {
-            if (mInstance == null) {
-                synchronized(NLogger::class.java) {
-                    if (mInstance == null) {
-                        mInstance = NLogger()
-                    }
-                }
-            }
-            return mInstance!!
-        }
-
-        /**
-         * init NLogger from annotation
-         * @param obj
-         */
-        @JvmStatic
-        fun init(obj: Any) {
-            val clazz = obj.javaClass
-            if (!clazz.isAnnotationPresent(Logger::class.java)) {
-                return
-            }
-
-            val inject = clazz.getAnnotation(Logger::class.java) as Logger
-            val level: LoggerLevel
-
-            level = when (inject.level) {
-                Logger.DEBUG -> LoggerLevel.DEBUG
-                Logger.INFO -> LoggerLevel.INFO
-                Logger.WARN -> LoggerLevel.WARN
-                Logger.ERROR -> LoggerLevel.ERROR
-                Logger.OFF -> LoggerLevel.OFF
-                else -> LoggerLevel.WARN
-            }
-
-            NLogger.getInstance()
-                    .builder()
-                    .tag(inject.tag)
-                    .loggerLevel(level)
-                    .build()
+            NLoggerConfig.getInstance().getFileLogger()?.info(msg)
         }
     }
 
-    inner class Builder {
-        var tag = NLogger::class.java.simpleName
-        var loggerLevel = LoggerLevel.WARN
-        var isCatchException = false
-        var uncaughtExceptionListener: CrashWatcher.UncaughtExceptionListener? = null
-        var isFileLoggerEnable = false
-        var fileDirectory = Environment.getExternalStorageDirectory().path + "/native.logs/"
-        var fileFormatter: Formatter = SimpleFormatter()
-        var expiredPeriod = 1
+    @JvmStatic
+    fun i(tag: String, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(tag, msg)
 
-        /**
-         * init builder , prepare env
-         *
-         */
-        init {
-            val filePath = File(fileDirectory)
-            if (!filePath.exists()) {
-                filePath.mkdirs()
-            }
-
-            uncaughtExceptionListener = CrashWatcher.UncaughtExceptionListener { _, _ ->
-                android.os.Process.killProcess(android.os.Process.myPid())
-            }
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set tag
-         *
-         * @throws IllegalArgumentException if the tag is null | empty
-         */
-        fun tag(tag: String): Builder {
-            if (TextUtils.isEmpty(tag)) {
-                throw IllegalArgumentException("unexpected tag")
-            }
+        NLoggerConfig.getInstance().getFileLogger()?.info(tag, msg)
+    }
 
-            this.tag = tag
-            return this
+    @JvmStatic
+    fun i(tag: String, format: String, arg: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(tag, format, arg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * catch uncaught exception
-         *
-         */
-        fun catchException(enable: Boolean, listener: CrashWatcher.UncaughtExceptionListener): Builder {
-            this.isCatchException = enable
-            this.uncaughtExceptionListener = listener
-            return this
+        NLoggerConfig.getInstance().getFileLogger()?.info(tag, format, arg)
+    }
+
+    @JvmStatic
+    fun i(tag: String, format: String, argA: Any, argB: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(tag, format, argA, argB)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set the logger level
-         *
-         */
-        fun loggerLevel(level: LoggerLevel): Builder {
-            this.loggerLevel = level
-            return this
+        NLoggerConfig.getInstance().getFileLogger()?.info(tag, format, argA, argB)
+    }
+
+    @JvmStatic
+    fun i(tag: String, format: String, vararg args: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(tag, format, *args)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set file logger enable
-         *
-         */
-        fun fileLogger(enable: Boolean): Builder {
-            this.isFileLoggerEnable = enable
-            return this
+        NLoggerConfig.getInstance().getFileLogger()?.info(tag, format, *args)
+    }
+
+    @JvmStatic
+    fun i(tag: String, ex: Throwable) {
+        NLoggerConfig.getInstance().getDefaultLogger().info(tag, ex)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set pack log period
-         *
-         * @throws IllegalArgumentException if the path is empty
-         */
-        fun fileDirectory(path: String): Builder {
-            if (TextUtils.isEmpty(path)) {
-                throw IllegalArgumentException("unexpected path")
-            }
+        NLoggerConfig.getInstance().getFileLogger()?.info(tag, ex)
+    }
 
-            val filePath = File(path)
-            if (!filePath.exists() && !filePath.mkdirs()) {
-                NLogger.getInstance().defaultLogger.error(tag, "can not make dir, please check permission")
-            }
+    @JvmStatic
+    fun d(msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(msg)
 
-            this.fileDirectory = path
-            return this
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set file logger formatter
-         *
-         * @throws IllegalArgumentException if the formatter is null
-         */
-        fun fileFormatter(formatter: Formatter?): Builder {
-            if (null == formatter) {
-                throw IllegalArgumentException("unexpected file formatter")
-            }
+        NLoggerConfig.getInstance().getFileLogger()?.debug(msg)
+    }
 
-            this.fileFormatter = formatter
-            return this
+    @JvmStatic
+    fun d(tag: String, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(tag, msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        /**
-         * set the period of file expired
-         *
-         * @throws IllegalArgumentException if the period <= 0
-         */
-        fun expiredPeriod(period: Int): Builder {
-            if (period <= 0) {
-                throw IllegalArgumentException("unexpected period : $period")
-            }
+        NLoggerConfig.getInstance().getFileLogger()?.debug(tag, msg)
+    }
 
-            expiredPeriod = period
-            return this
+    @JvmStatic
+    fun d(tag: String, format: String, arg: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(tag, format, arg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
 
-        fun build(): NLogger? {
-            return mInstance!!.build(this)
+        NLoggerConfig.getInstance().getFileLogger()?.debug(tag, format, arg)
+    }
+
+    @JvmStatic
+    fun d(tag: String, format: String, argA: Any, argB: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(tag, format, argA, argB)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
         }
+
+        NLoggerConfig.getInstance().getFileLogger()?.debug(tag, format, argA, argB)
+    }
+
+    @JvmStatic
+    fun d(tag: String, format: String, vararg args: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(tag, format, *args)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.debug(tag, format, *args)
+    }
+
+    @JvmStatic
+    fun d(tag: String, ex: Throwable) {
+        NLoggerConfig.getInstance().getDefaultLogger().debug(tag, ex)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.debug(tag, ex)
+    }
+
+    @JvmStatic
+    fun w(msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(msg)
+    }
+
+    @JvmStatic
+    fun w(tag: String, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(tag, msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(tag, msg)
+    }
+
+    @JvmStatic
+    fun w(tag: String, format: String, arg: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(tag, format, arg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(tag, format, arg)
+    }
+
+    @JvmStatic
+    fun w(tag: String, format: String, argA: Any, argB: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(tag, format, argA, argB)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(tag, format, argA, argB)
+    }
+
+    @JvmStatic
+    fun w(tag: String, format: String, vararg args: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(tag, format, *args)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(tag, format, *args)
+    }
+
+    @JvmStatic
+    fun w(tag: String, ex: Throwable) {
+        NLoggerConfig.getInstance().getDefaultLogger().warn(tag, ex)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.warn(tag, ex)
+    }
+
+    @JvmStatic
+    fun e(msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(msg)
+    }
+
+    @JvmStatic
+    fun e(tag: String, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(tag, msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(tag, msg)
+    }
+
+    @JvmStatic
+    fun e(tag: String, format: String, arg: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(tag, format, arg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(tag, format, arg)
+    }
+
+    @JvmStatic
+    fun e(tag: String, format: String, argA: Any, argB: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(tag, format, argA, argB)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(tag, format, argA, argB)
+    }
+
+    @JvmStatic
+    fun e(tag: String, format: String, vararg args: Any) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(tag, format, *args)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(tag, format, *args)
+    }
+
+    @JvmStatic
+    fun e(tag: String, ex: Throwable) {
+        NLoggerConfig.getInstance().getDefaultLogger().error(tag, ex)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.error(tag, ex)
+    }
+
+    @JvmStatic
+    fun json(level: LoggerLevel, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().json(level, msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null){
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.json(level, msg)
+    }
+
+    @JvmStatic
+    fun json(level: LoggerLevel, subTag: String, msg: String) {
+        NLoggerConfig.getInstance().getDefaultLogger().json(level, subTag, msg)
+
+        if (NLoggerConfig.getInstance().getFileLogger() == null) {
+            return
+        }
+
+        NLoggerConfig.getInstance().getFileLogger()?.json(level, subTag, msg)
     }
 }

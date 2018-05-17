@@ -3,7 +3,6 @@ package cn.jesse.nativelogger.util;
 import java.io.Closeable;
 import java.io.IOException;
 
-import cn.jesse.nativelogger.AbstractNativeLogger;
 import cn.jesse.nativelogger.NLogger;
 
 /**
