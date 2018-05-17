@@ -1,183 +1,168 @@
-package cn.jesse.nativelogger;
+package cn.jesse.nativelogger
 
-import android.os.Environment;
-import android.text.TextUtils;
+import android.os.Environment
+import android.text.TextUtils
+import cn.jesse.nativelogger.formatter.SimpleFormatter
+import cn.jesse.nativelogger.logger.AndroidLogger
+import cn.jesse.nativelogger.logger.FileLogger
+import cn.jesse.nativelogger.logger.LoggerLevel
+import cn.jesse.nativelogger.logger.base.IFileLogger
+import cn.jesse.nativelogger.logger.base.ILogger
+import cn.jesse.nativelogger.util.CrashWatcher
+import java.io.File
+import java.util.logging.Formatter
 
-import java.io.File;
-import java.util.logging.Formatter;
-
-import cn.jesse.nativelogger.formatter.SimpleFormatter;
-import cn.jesse.nativelogger.logger.AndroidLogger;
-import cn.jesse.nativelogger.logger.FileLogger;
-import cn.jesse.nativelogger.logger.LoggerLevel;
-import cn.jesse.nativelogger.logger.base.IFileLogger;
-import cn.jesse.nativelogger.logger.base.ILogger;
-import cn.jesse.nativelogger.util.CrashWatcher;
-
-/**
- * Created by jesse on 9/5/16.
- */
-public class NLogger extends AbstractNativeLogger{
-    private static final String TAG = NLogger.class.getSimpleName();
-    private static volatile NLogger mInstance;
-    private static volatile Builder builder;
-
-    private volatile ILogger defaultLogger = new AndroidLogger(TAG);
-    private volatile ILogger fileLogger;
-
-    private NLogger() {
-
-    }
-
-    /**
-     * get instance
-     * @return
-     */
-    public static synchronized NLogger getInstance() {
-        if (mInstance == null) {
-            synchronized (NLogger.class) {
-                if (mInstance == null) {
-                    mInstance = new NLogger();
-                }
-            }
-        }
-        return mInstance;
-    }
-
-    /**
-     * init NLogger from annotation
-     * @param obj
-     */
-    public static void init(Object obj) {
-        Class clazz= obj.getClass();
-        if (!clazz.isAnnotationPresent(Logger.class))
-            return;
-
-        Logger inject= (Logger) clazz.getAnnotation(Logger.class);
-        String tag =inject.tag();
-        LoggerLevel level;
-
-        switch (inject.level()) {
-            case Logger.DEBUG:
-                level = LoggerLevel.DEBUG;
-                break;
-            case Logger.INFO:
-                level = LoggerLevel.INFO;
-                break;
-            case Logger.WARN:
-                level = LoggerLevel.WARN;
-                break;
-            case Logger.ERROR:
-                level = LoggerLevel.ERROR;
-                break;
-            case Logger.OFF:
-                level = LoggerLevel.OFF;
-                break;
-            default:
-                level = LoggerLevel.WARN;
-        }
-
-        NLogger.getInstance()
-                .builder()
-                .tag(tag)
-                .loggerLevel(level)
-                .build();
-    }
+class NLogger : AbstractNativeLogger() {
+    private val TAG = NLogger::class.java.simpleName
+    @Volatile
+    private var builder: Builder? = null
+    private val defaultLogger: ILogger = AndroidLogger(TAG)
+    @Volatile
+    private var fileLogger: ILogger? = null
 
     /**
      * build builder to android logger & file logger & exception watcher
      * @param builder
      * @return
      */
-    private synchronized NLogger build(Builder builder) {
+    @Synchronized
+    private fun build(builder: Builder): NLogger? {
         if (builder.isCatchException) {
-            CrashWatcher.getInstance().init();
-            CrashWatcher.getInstance().setListener(builder.uncaughtExceptionListener);
-        } else
-            CrashWatcher.getInstance().setListener(null);
+            CrashWatcher.getInstance().init()
+            CrashWatcher.getInstance().setListener(builder.uncaughtExceptionListener)
+        } else {
+            CrashWatcher.getInstance().setListener(null)
+        }
 
 
-        defaultLogger.setTag(builder.tag);
-        defaultLogger.setLevel(builder.loggerLevel);
+        defaultLogger.setTag(builder.tag)
+        defaultLogger.setLevel(builder.loggerLevel)
 
         if (!builder.isFileLoggerEnable) {
-            fileLogger = null;
-            return mInstance;
+            fileLogger = null
+            return mInstance
         }
 
         if (fileLogger == null) {
-            fileLogger = new FileLogger(builder.tag);
+            fileLogger = FileLogger(builder.tag)
 
 
         } else {
-            fileLogger.setTag(builder.tag);
+            fileLogger!!.setTag(builder.tag)
         }
 
-        fileLogger.setLevel(builder.loggerLevel);
-        IFileLogger iFileLogger = (IFileLogger) fileLogger;
-        iFileLogger.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.expiredPeriod);
+        fileLogger!!.setLevel(builder.loggerLevel)
+        val iFileLogger = fileLogger as IFileLogger?
+        iFileLogger!!.setFilePathAndFormatter(builder.fileDirectory, builder.fileFormatter, builder.expiredPeriod)
 
-        return mInstance;
+        return mInstance
     }
 
     /**
      * instance builder
      * @return
      */
-    public Builder builder() {
+    fun builder(): Builder {
         if (builder == null) {
-            synchronized (NLogger.class) {
+            synchronized(NLogger::class.java) {
                 if (builder == null) {
-                    builder = new Builder();
+                    builder = Builder()
                 }
             }
         }
-        return builder;
+        return builder!!
     }
 
     /**
      * get android logger
      *
      */
-    @Override
-    public ILogger getDefaultLogger() {
-        return this.defaultLogger;
+    override fun getDefaultLogger(): ILogger {
+        return this.defaultLogger
     }
 
     /**
      * get file logger
      *
      */
-    @Override
-    public ILogger getFileLogger() {
-        return this.fileLogger;
+    override fun getFileLogger(): ILogger? {
+        return this.fileLogger
     }
 
-    public static final class Builder {
-        private String tag = NLogger.class.getSimpleName();
-        private LoggerLevel loggerLevel = LoggerLevel.WARN;
-        private boolean isCatchException = false;
-        private CrashWatcher.UncaughtExceptionListener uncaughtExceptionListener;
-        private boolean isFileLoggerEnable = false;
-        private String fileDirectory = Environment.getExternalStorageDirectory().getPath() + "/native.logs/";
-        private Formatter fileFormatter = new SimpleFormatter();
-        private int expiredPeriod = 1;
+    companion object {
+        @Volatile
+        private var mInstance: NLogger? = null
+
+        /**
+         * get instance
+         * @return
+         */
+        @JvmStatic
+        fun getInstance(): NLogger {
+            if (mInstance == null) {
+                synchronized(NLogger::class.java) {
+                    if (mInstance == null) {
+                        mInstance = NLogger()
+                    }
+                }
+            }
+            return mInstance!!
+        }
+
+        /**
+         * init NLogger from annotation
+         * @param obj
+         */
+        @JvmStatic
+        fun init(obj: Any) {
+            val clazz = obj.javaClass
+            if (!clazz.isAnnotationPresent(Logger::class.java)) {
+                return
+            }
+
+            val inject = clazz.getAnnotation(Logger::class.java) as Logger
+            val level: LoggerLevel
+
+            level = when (inject.level) {
+                Logger.DEBUG -> LoggerLevel.DEBUG
+                Logger.INFO -> LoggerLevel.INFO
+                Logger.WARN -> LoggerLevel.WARN
+                Logger.ERROR -> LoggerLevel.ERROR
+                Logger.OFF -> LoggerLevel.OFF
+                else -> LoggerLevel.WARN
+            }
+
+            NLogger.getInstance()
+                    .builder()
+                    .tag(inject.tag)
+                    .loggerLevel(level)
+                    .build()
+        }
+    }
+
+    inner class Builder {
+        var tag = NLogger::class.java.simpleName
+        var loggerLevel = LoggerLevel.WARN
+        var isCatchException = false
+        var uncaughtExceptionListener: CrashWatcher.UncaughtExceptionListener? = null
+        var isFileLoggerEnable = false
+        var fileDirectory = Environment.getExternalStorageDirectory().path + "/native.logs/"
+        var fileFormatter: Formatter = SimpleFormatter()
+        var expiredPeriod = 1
 
         /**
          * init builder , prepare env
          *
          */
-        public Builder() {
-            File filePath = new File(fileDirectory);
-            if (!filePath.exists())
-                filePath.mkdirs();
+        init {
+            val filePath = File(fileDirectory)
+            if (!filePath.exists()) {
+                filePath.mkdirs()
+            }
 
-            uncaughtExceptionListener = new CrashWatcher.UncaughtExceptionListener() {
-                @Override
-                public void uncaughtException(Thread thread, Throwable ex) {
-                    android.os.Process.killProcess(android.os.Process.myPid());
-                }
-            };
+            uncaughtExceptionListener = CrashWatcher.UncaughtExceptionListener { _, _ ->
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }
         }
 
         /**
@@ -185,40 +170,41 @@ public class NLogger extends AbstractNativeLogger{
          *
          * @throws IllegalArgumentException if the tag is null | empty
          */
-        public Builder tag(String tag) {
-            if (TextUtils.isEmpty(tag))
-                throw new IllegalArgumentException("unexpected tag");
+        fun tag(tag: String): Builder {
+            if (TextUtils.isEmpty(tag)) {
+                throw IllegalArgumentException("unexpected tag")
+            }
 
-            this.tag = tag;
-            return this;
+            this.tag = tag
+            return this
         }
 
         /**
          * catch uncaught exception
          *
          */
-        public Builder catchException(boolean enable, CrashWatcher.UncaughtExceptionListener listener) {
-            this.isCatchException = enable;
-            this.uncaughtExceptionListener = listener;
-            return this;
+        fun catchException(enable: Boolean, listener: CrashWatcher.UncaughtExceptionListener): Builder {
+            this.isCatchException = enable
+            this.uncaughtExceptionListener = listener
+            return this
         }
 
         /**
          * set the logger level
          *
          */
-        public Builder loggerLevel(LoggerLevel level) {
-            this.loggerLevel = level;
-            return this;
+        fun loggerLevel(level: LoggerLevel): Builder {
+            this.loggerLevel = level
+            return this
         }
 
         /**
          * set file logger enable
          *
          */
-        public Builder fileLogger(boolean enable) {
-            this.isFileLoggerEnable = enable;
-            return this;
+        fun fileLogger(enable: Boolean): Builder {
+            this.isFileLoggerEnable = enable
+            return this
         }
 
         /**
@@ -226,16 +212,18 @@ public class NLogger extends AbstractNativeLogger{
          *
          * @throws IllegalArgumentException if the path is empty
          */
-        public Builder fileDirectory(String path) {
-            if (TextUtils.isEmpty(path))
-                throw new IllegalArgumentException("unexpected path");
+        fun fileDirectory(path: String): Builder {
+            if (TextUtils.isEmpty(path)) {
+                throw IllegalArgumentException("unexpected path")
+            }
 
-            File filePath = new File(path);
-            if (!filePath.exists() && !filePath.mkdirs())
-                    NLogger.getInstance().defaultLogger.error(tag, "can not make dir, please check permission");
+            val filePath = File(path)
+            if (!filePath.exists() && !filePath.mkdirs()) {
+                NLogger.getInstance().defaultLogger.error(tag, "can not make dir, please check permission")
+            }
 
-            this.fileDirectory = path;
-            return this;
+            this.fileDirectory = path
+            return this
         }
 
         /**
@@ -243,12 +231,13 @@ public class NLogger extends AbstractNativeLogger{
          *
          * @throws IllegalArgumentException if the formatter is null
          */
-        public Builder fileFormatter(Formatter formatter) {
-            if (null == formatter)
-                throw new IllegalArgumentException("unexpected file formatter");
+        fun fileFormatter(formatter: Formatter?): Builder {
+            if (null == formatter) {
+                throw IllegalArgumentException("unexpected file formatter")
+            }
 
-            this.fileFormatter = formatter;
-            return this;
+            this.fileFormatter = formatter
+            return this
         }
 
         /**
@@ -256,16 +245,17 @@ public class NLogger extends AbstractNativeLogger{
          *
          * @throws IllegalArgumentException if the period <= 0
          */
-        public Builder expiredPeriod(int period) {
-            if (period <= 0)
-                throw new IllegalArgumentException("unexpected period : " + period);
+        fun expiredPeriod(period: Int): Builder {
+            if (period <= 0) {
+                throw IllegalArgumentException("unexpected period : $period")
+            }
 
-            expiredPeriod = period;
-            return this;
+            expiredPeriod = period
+            return this
         }
 
-        public NLogger build() {
-            return mInstance.build(this);
+        fun build(): NLogger? {
+            return mInstance!!.build(this)
         }
     }
 }

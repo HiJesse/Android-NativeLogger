@@ -13,12 +13,11 @@ import cn.jesse.nativelogger.util.CrashWatcher;
  * Created by jesse on 10/15/16.
  */
 @Logger(tag = "Test", level = Logger.INFO)
-public class MyApplication extends Application {
+class MyApplication : Application() {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        NLogger.init(this);
+    override fun onCreate() {
+        super.onCreate()
+        NLogger.init(this)
 
 
         NLogger.getInstance()
@@ -28,15 +27,12 @@ public class MyApplication extends Application {
                 .fileLogger(true)
                 .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
 //                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
-                .fileFormatter(new SimpleFormatter())
+                .fileFormatter(SimpleFormatter())
                 .expiredPeriod(3)
-                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
-                    @Override
-                    public void uncaughtException(Thread thread, Throwable ex) {
-                        NLogger.e("uncaughtException", ex);
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                    }
+                .catchException(true, CrashWatcher.UncaughtExceptionListener { _, ex ->
+//                    NLogger.e("uncaughtException", ex)
+                    android.os.Process.killProcess(android.os.Process.myPid())
                 })
-                .build();
+                .build()
     }
 }
