@@ -36,18 +36,8 @@ interface IFileLogger {
     /**
      * 压缩日志
      *
-     * @param listener 压缩结果回调
+     * @param listener 压缩结果回调. succeed 是否成功, target 压缩包路径
+     *
      */
-    fun zipLogs(listener: OnZipListener)
-
-    interface OnZipListener {
-
-        /**
-         * 压缩结果回调
-         *
-         * @param succeed 是否成功
-         * @param target 成功的话返回压缩包文件名路径
-         */
-        fun onZip(succeed: Boolean, target: String)
-    }
+    fun zipLogs(listener: (succeed: Boolean, target: String) -> Unit)
 }

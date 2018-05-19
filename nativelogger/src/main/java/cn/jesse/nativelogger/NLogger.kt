@@ -14,7 +14,7 @@ object NLogger {
      * 压缩日志文件
      */
     @JvmStatic
-    fun zipLogs(listener: IFileLogger.OnZipListener) {
+    fun zipLogs(listener: (succeed: Boolean, target: String) -> Unit) {
         val fileLogger = NLoggerConfig.getInstance().getFileLogger() as IFileLogger ?
 
         if (null == fileLogger) {

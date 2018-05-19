@@ -67,7 +67,7 @@ class FileLogger(tag: String) : AbstractLogger(tag), IFileLogger {
         return this.expiredPeriod
     }
 
-    override fun zipLogs(listener: IFileLogger.OnZipListener) {
+    override fun zipLogs(listener: (succeed: Boolean, target: String) -> Unit) {
         handler.post {
             var result = false
             val targetZipFileName = logDir + DateUtil.getCurrentDate() + ZipUtil.SUFFIX_ZIP
@@ -82,7 +82,7 @@ class FileLogger(tag: String) : AbstractLogger(tag), IFileLogger {
                 error(tag(), e)
             }
 
-            listener.onZip(result, targetZipFileName)
+            listener(result, targetZipFileName)
         }
     }
 

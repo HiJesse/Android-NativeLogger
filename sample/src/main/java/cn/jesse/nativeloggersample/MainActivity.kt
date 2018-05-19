@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import cn.jesse.nativelogger.NLogger
 import cn.jesse.nativelogger.logger.LoggerLevel
-import cn.jesse.nativelogger.logger.base.IFileLogger
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -26,12 +25,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        NLogger.zipLogs(object : IFileLogger.OnZipListener {
-            override fun onZip(succeed: Boolean, target: String) {
-                if (succeed) {
-                    NLogger.i("zip", "succeed : $target")
-                }
+        NLogger.zipLogs { succeed, target ->
+            if (succeed) {
+                NLogger.i("zip", "succeed : $target")
             }
-        })
+        }
     }
 }
