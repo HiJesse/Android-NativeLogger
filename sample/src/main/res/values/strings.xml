@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android-NativeLogger</string>
+    <string name="btn_zip_logs">压缩日志</string>
+    <string name="btn_open_java">Java代码</string>
 </resources>

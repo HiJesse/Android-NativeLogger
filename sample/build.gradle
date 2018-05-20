@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion  rootProject.ext.build['compileSdkVersion']
-    buildToolsVersion  rootProject.ext.build['buildToolsVersion']
+    compileSdkVersion rootProject.ext.build['compileSdkVersion']
+    buildToolsVersion rootProject.ext.build['buildToolsVersion']
 
     defaultConfig {
         applicationId "cn.jesse.nativeloggersample"
-        minSdkVersion  rootProject.ext.build['minSdkVersion']
-        targetSdkVersion  rootProject.ext.build['targetSdkVersion']
-        versionCode  rootProject.ext.build['versionCode']
+        minSdkVersion rootProject.ext.build['minSdkVersion']
+        targetSdkVersion rootProject.ext.build['targetSdkVersion']
+        versionCode rootProject.ext.build['versionCode']
         versionName rootProject.ext.build['versionName']
     }
     buildTypes {
@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile rootProject.ext.dep['junit']
     compile rootProject.ext.dep['support-v7']

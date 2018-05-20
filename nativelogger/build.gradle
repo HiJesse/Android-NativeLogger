@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 //apply from: '../deploy.gradle'
 
 android {
-    compileSdkVersion  rootProject.ext.build['compileSdkVersion']
-    buildToolsVersion  rootProject.ext.build['buildToolsVersion']
+    compileSdkVersion rootProject.ext.build['compileSdkVersion']
+    buildToolsVersion rootProject.ext.build['buildToolsVersion']
 
     defaultConfig {
-        minSdkVersion  rootProject.ext.build['minSdkVersion']
-        targetSdkVersion  rootProject.ext.build['targetSdkVersion']
-        versionCode  rootProject.ext.build['versionCode']
+        minSdkVersion rootProject.ext.build['minSdkVersion']
+        targetSdkVersion rootProject.ext.build['targetSdkVersion']
+        versionCode rootProject.ext.build['versionCode']
         versionName rootProject.ext.build['versionName']
     }
 
