@@ -16,16 +16,17 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        NLoggerConfig.init(this)
+        // 使用注解方式初始化
+//        NLoggerConfig.init(this)
 
 
+        // 使用builder 初始化
         NLoggerConfig.getInstance()
                 .builder()
                 .tag("APP")
                 .loggerLevel(LoggerLevel.DEBUG)
                 .fileLogger(true)
-                .fileDirectory(Environment.getExternalStorageDirectory().getPath() + "/download/b/a")
-//                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .fileDirectory(applicationContext.filesDir.path + "/logs")
                 .fileFormatter(SimpleFormatter())
                 .expiredPeriod(3)
                 .catchException(true, { _, ex ->

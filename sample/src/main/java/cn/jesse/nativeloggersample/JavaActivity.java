@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import cn.jesse.nativelogger.Logger;
 import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.NLoggerConfig;
 import cn.jesse.nativelogger.logger.LoggerLevel;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -14,6 +16,7 @@ import kotlin.jvm.functions.Function2;
  *
  * @author Jesse
  */
+@Logger(tag = "java", level = Logger.DEBUG)
 public class JavaActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = JavaActivity.class.getSimpleName();
 
@@ -22,6 +25,24 @@ public class JavaActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java);
         findViewById(R.id.tvZip).setOnClickListener(this);
+        // 使用注解方式初始化
+//        NLoggerConfig.init(this);
+
+        // 使用builder 初始化
+        NLoggerConfig.getInstance()
+                .builder()
+                .tag("JAVA")
+                .loggerLevel(LoggerLevel.INFO)
+                .fileLogger(false)
+                .catchException(true, new Function2<Thread, Throwable, Unit>() {
+                    @Override
+                    public Unit invoke(Thread thread, Throwable throwable) {
+                        NLogger.e("uncaughtException", throwable);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        return null;
+                    }
+                })
+                .build();
 
         NLogger.d("debug");
         NLogger.i(TAG, "type1");
