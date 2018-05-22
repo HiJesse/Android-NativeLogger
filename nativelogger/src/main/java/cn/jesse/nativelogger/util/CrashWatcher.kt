@@ -1,38 +1,44 @@
-package cn.jesse.nativelogger.util;
+package cn.jesse.nativelogger.util
 
 /**
- * Created by jesse on 9/5/16.
+ * 监听全局异常, 捕获并回调
+ *
+ * @author Jesse
  */
-public class CrashWatcher implements Thread.UncaughtExceptionHandler {
-    private static CrashWatcher mInstance = new CrashWatcher();
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
-    private UncaughtExceptionListener listener;
+class CrashWatcher private constructor() : Thread.UncaughtExceptionHandler {
+    private var mDefaultHandler: Thread.UncaughtExceptionHandler? = null
+    private var listener: ((thread: Thread?, ex: Throwable?) -> Unit)? = null
 
-    private CrashWatcher() {
+    fun init() {
+        if (null != mDefaultHandler) {
+            return
+        }
+
+        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(this)
     }
 
-    public static CrashWatcher getInstance() {
-        return mInstance;
+    fun setListener(listener: ((thread: Thread?, ex: Throwable?) -> Unit)?) {
+        this.listener = listener
     }
 
-    public void init() {
-        if (null != mDefaultHandler)
-            return;
-        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
+    override fun uncaughtException(t: Thread?, e: Throwable?) {
+        listener?.invoke(t, e)
     }
 
-    public void setListener(UncaughtExceptionListener listener) {
-        this.listener = listener;
-    }
+    companion object {
+        private var mInstance: CrashWatcher? = null
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
-        if (null != listener)
-            listener.uncaughtException(thread, ex);
-    }
+        fun getInstance(): CrashWatcher {
+            if (null == mInstance) {
+                synchronized(CrashWatcher::class.java) {
+                    if (null == mInstance) {
+                        mInstance = CrashWatcher()
+                    }
+                }
+            }
 
-    public interface UncaughtExceptionListener {
-        void uncaughtException(Thread thread, Throwable ex);
+            return mInstance!!
+        }
     }
 }

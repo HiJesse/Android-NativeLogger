@@ -1,19 +1,20 @@
-package cn.jesse.nativelogger.util;
+package cn.jesse.nativelogger.util
 
-import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat
 
 /**
- * Created by jesse on 9/6/16.
+ * 日期工具类
+ *
+ * @author Jesse
  */
-public class DateUtil {
-    private static final String TEMPLATE_DATE = "yyyy-MM-dd";
+object DateUtil {
+    private val TEMPLATE_DATE = "yyyy-MM-dd"
 
-    private DateUtil() {
-        //unused
-    }
-
-    public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(TEMPLATE_DATE);
-        return sdf.format(System.currentTimeMillis());
+    /**
+     * 以yyyy-MM-dd格式获取当前时间
+     */
+    fun getCurrentDate(): String {
+        val sdf = SimpleDateFormat(TEMPLATE_DATE)
+        return sdf.format(System.currentTimeMillis())
     }
 }

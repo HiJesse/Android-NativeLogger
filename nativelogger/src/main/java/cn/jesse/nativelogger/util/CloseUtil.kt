@@ -1,26 +1,27 @@
-package cn.jesse.nativelogger.util;
+package cn.jesse.nativelogger.util
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.io.Closeable
+import java.io.IOException
 
-import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.NLogger
 
 /**
- * Created by jesse on 15/03/2017.
+ * 关闭各种
+ *
+ * @author Jesse
  */
+object CloseUtil {
 
-public class CloseUtil {
-    private CloseUtil() {
-        //unused
-    }
-
-    public static void close(Closeable closeable) {
+    /**
+     * 关闭Closeable对象
+     *
+     * @param closeable 对象
+     */
+    fun close(closeable: Closeable?) {
         try {
-            if (null != closeable) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            NLogger.e("close", e);
+            closeable?.close()
+        } catch (e: IOException) {
+            NLogger.e("close", e)
         }
     }
 }

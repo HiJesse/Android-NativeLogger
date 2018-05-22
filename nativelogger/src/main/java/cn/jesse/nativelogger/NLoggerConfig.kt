@@ -147,7 +147,7 @@ class NLoggerConfig {
         var tag = NLoggerConfig::class.java.simpleName
         var loggerLevel = LoggerLevel.WARN
         var isCatchException = false
-        var uncaughtExceptionListener: CrashWatcher.UncaughtExceptionListener? = null
+        var uncaughtExceptionListener: ((thread: Thread?, ex: Throwable?) -> Unit)? = null
         var isFileLoggerEnable = false
         var fileDirectory = Environment.getExternalStorageDirectory().path + "/native.logs/"
         var fileFormatter: Formatter = SimpleFormatter()
@@ -163,7 +163,7 @@ class NLoggerConfig {
                 filePath.mkdirs()
             }
 
-            uncaughtExceptionListener = CrashWatcher.UncaughtExceptionListener { _, _ ->
+            uncaughtExceptionListener = { _, _ ->
                 android.os.Process.killProcess(android.os.Process.myPid())
             }
         }
@@ -186,7 +186,7 @@ class NLoggerConfig {
          * catch uncaught exception
          *
          */
-        fun catchException(enable: Boolean, listener: CrashWatcher.UncaughtExceptionListener): Builder {
+        fun catchException(enable: Boolean, listener: ((thread: Thread?, ex: Throwable?) -> Unit)?): Builder {
             this.isCatchException = enable
             this.uncaughtExceptionListener = listener
             return this
