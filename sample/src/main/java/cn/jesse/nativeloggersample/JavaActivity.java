@@ -16,7 +16,7 @@ import kotlin.jvm.functions.Function2;
  *
  * @author Jesse
  */
-@Logger(tag = "java", level = Logger.DEBUG)
+@Logger(tag = "java", level = LoggerLevel.DEBUG)
 public class JavaActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = JavaActivity.class.getSimpleName();
 

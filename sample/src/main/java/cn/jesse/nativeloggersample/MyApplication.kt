@@ -9,9 +9,11 @@ import cn.jesse.nativelogger.formatter.SimpleFormatter
 import cn.jesse.nativelogger.logger.LoggerLevel
 
 /**
- * Created by jesse on 10/15/16.
+ * app 入口处初始化NLogger. 提供两种方式
+ *
+ * @author Jesse
  */
-@Logger(tag = "Test", level = Logger.INFO)
+@Logger(tag = "Test", level = LoggerLevel.INFO)
 class MyApplication : Application() {
 
     override fun onCreate() {

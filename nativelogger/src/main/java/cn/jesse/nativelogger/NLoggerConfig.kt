@@ -124,16 +124,7 @@ class NLoggerConfig {
             }
 
             val inject = clazz.getAnnotation(Logger::class.java) as Logger
-            val level: LoggerLevel
-
-            level = when (inject.level) {
-                Logger.DEBUG -> LoggerLevel.DEBUG
-                Logger.INFO -> LoggerLevel.INFO
-                Logger.WARN -> LoggerLevel.WARN
-                Logger.ERROR -> LoggerLevel.ERROR
-                Logger.OFF -> LoggerLevel.OFF
-                else -> LoggerLevel.WARN
-            }
+            val level: LoggerLevel = inject.level
 
             NLoggerConfig.getInstance()
                     .builder()
