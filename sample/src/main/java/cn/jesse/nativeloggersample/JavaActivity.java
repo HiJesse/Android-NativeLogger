@@ -58,7 +58,7 @@ public class JavaActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public Unit invoke(Boolean succeed, String target) {
                 if (Boolean.valueOf(true).equals(succeed)) {
-                    NLogger.i("zip", "succeed : " + target);
+                    NLogger.i("zip", "succeed : " + target + " Thread " + Thread.currentThread().getName());
                 }
                 return null;
             }

@@ -12,6 +12,8 @@ object NLogger {
 
     /**
      * 压缩日志文件
+     *
+     * @params listener 子线程回调
      */
     @JvmStatic
     fun zipLogs(listener: (succeed: Boolean, target: String) -> Unit) {

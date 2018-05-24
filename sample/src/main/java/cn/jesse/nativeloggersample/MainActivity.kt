@@ -1,4 +1,4 @@
-package cn.jesse.nativeloggersample;
+package cn.jesse.nativeloggersample
 
 import android.content.Intent
 import android.os.Bundle
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         NLogger.zipLogs { succeed, target ->
             if (succeed) {
-                NLogger.i("zip", "succeed : $target")
+                NLogger.i("zip", "succeed : $target Thread: ${Thread.currentThread().name}")
             }
         }
     }
