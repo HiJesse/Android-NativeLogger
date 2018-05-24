@@ -24,7 +24,7 @@ abstract class AbstractLogger(tag: String) : ILogger {
 
 
     override fun setTag(tag: String) {
-        this.mTag = mTag
+        this.mTag = tag
     }
 
     override fun isEnabled(level: LoggerLevel): Boolean {

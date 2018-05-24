@@ -16,10 +16,9 @@ import java.util.logging.Formatter
  * NLogger配置器
  */
 class NLoggerConfig {
-    private val TAG = NLoggerConfig::class.java.simpleName
     @Volatile
     private var builder: Builder? = null
-    private val defaultLogger: ILogger = AndroidLogger(TAG)
+    private val defaultLogger: ILogger = AndroidLogger("NLogger")
     @Volatile
     private var fileLogger: ILogger? = null
 
