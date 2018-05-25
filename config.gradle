@@ -6,8 +6,8 @@ ext {
             "targetSdkVersion" : 17,
             "minSdkVersion"    : 16,
             "compileSdkVersion": 27,
-            "versionCode"      : 5,
-            "versionName"      : '2.1.0',
+            "versionCode"      : 6,
+            "versionName"      : '2.5.0',
             "buildToolsVersion": '27.0.3',
             "kotlinVersion"    : '1.2.41',
     ]

@@ -38,63 +38,78 @@ Module`build.gradle`中引入NLogger.
 
 ```
 dependencies {
-    compile 'com.github.hijesse:android-logger:2.0.0'
+    compile 'com.github.hijesse:android-logger:2.5.0'
 }
 ```
 
 ## 如何使用
 
-* 注解配置
+* 初始化-注解配置
+	
+	[Java调用参考](https://github.com/HiJesse/Android-NativeLogger/blob/69d5a3572d45aadf86dc503ac5615f1c334a53b2/sample/src/main/java/cn/jesse/nativeloggersample/JavaActivity.java#L19-L29)
+	
+	Kotlin调用示例:
+	
+	```
+	@Logger(tag = "Test", level = LoggerLevel.INFO)
+	class MyApplication : Application() {
+	
+	    override fun onCreate() {
+	        super.onCreate()
+	        // 使用注解方式初始化
+	        NLoggerConfig.init(this)
+	    }
+	}
+	```
+	
+* 初始化-全量配置
+	
+	[Java调用参考](https://github.com/HiJesse/Android-NativeLogger/blob/69d5a3572d45aadf86dc503ac5615f1c334a53b2/sample/src/main/java/cn/jesse/nativeloggersample/JavaActivity.java#L32-L45)
+	
+	Kotlin调用示例:
+	
+	```
+	NLoggerConfig.getInstance()
+	        .builder()
+	        .tag("APP")
+	        .loggerLevel(LoggerLevel.DEBUG)
+	        .fileLogger(true)
+	        .fileDirectory(applicationContext.filesDir.path + "/logs")
+	        .fileFormatter(SimpleFormatter())
+	        .expiredPeriod(3)
+	        .catchException(true, { _, ex ->
+	            NLogger.e("uncaughtException", ex!!)
+	            android.os.Process.killProcess(android.os.Process.myPid())
+	        })
+	        .build()
+		
+	```
 
-```
-@Logger(tag = "Test", level = Logger.INFO)
-public class MyApplication extends Application {
+* 日志打印
+	
+	Kotlin和Java的调用完全一致.
+	
+	```
+	NLogger.d("debug");
+	NLogger.i("MainActivity", "type1");
+	NLogger.w("MainActivity", "%s", "type2");
+	NLogger.d("MainActivity", "%s%d%s", "type", 3, "finish");
+	NLogger.e("uncaughtException", throwable);
+	NLogger.json(LoggerLevel.INFO, "{...}");
+	```
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        NLogger.init(this);
-    }
-}
-```
-* 动态配置
+* 日志压缩
 
-```
-NLogger.getInstance()
-        .builder()
-        .tag("APP")
-        .loggerLevel(LoggerLevel.DEBUG)
-        .fileLogger(true)
-        .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
-        .fileFormatter(new SimpleFormatter())
-        .expiredPeriod(3)
-        .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                NLogger.e("uncaughtException", ex);
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        })
-        .build();
-
-```
-
-* 使用方式
-
-```
-NLogger.d("debug");
-NLogger.i("MainActivity", "type1");
-NLogger.w("MainActivity", "%s", "type2");
-NLogger.d("MainActivity", "%s%d%s", "type", 3, "finish");
-NLogger.e("uncaughtException", throwable);
-NLogger.json(LoggerLevel.INFO, "{...}");
-
-//zip log files
-NLogger.zipLogs(new IFileLogger.OnZipListener() {
-    @Override
-    public void onZip(boolean succeed, String target) {
-        if (succeed)
-            NLogger.i("zip", "succeed : " + target);
-    }
-});
-```
+	假设配置了日志文件打包周期为3天, 调用压缩日志后组件会压缩最近三天的日志到压缩包, 并回调到业务中. **压缩结果回调为子线程.**
+	
+	[Java调用参考](https://github.com/HiJesse/Android-NativeLogger/blob/69d5a3572d45aadf86dc503ac5615f1c334a53b2/sample/src/main/java/cn/jesse/nativeloggersample/JavaActivity.java#L57-L65)
+	
+	Kotlin调用示例:
+	
+	```
+	NLogger.zipLogs { succeed, target ->
+	    if (succeed) {
+	        NLogger.i("zip", "succeed : $target Thread: ${Thread.currentThread().name}")
+	    }
+	}
+	```
