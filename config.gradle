@@ -16,6 +16,7 @@ ext {
             "junit"     : 'junit:junit:4.12',
             "support-v7": 'com.android.support:appcompat-v7:27.1.0',
             "kotlinLib" : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${build.kotlinVersion}",
+            "NLogger"   :  "com.github.hijesse:android-logger:${build.versionName}",
 
     ]
 }

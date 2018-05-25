@@ -26,6 +26,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile rootProject.ext.dep['junit']
     compile rootProject.ext.dep['support-v7']
-    compile project(':nativelogger')
     compile rootProject.ext.dep['kotlinLib']
+    compile rootProject.ext.dep['NLogger']
+//    compile project(':nativelogger')
 }
