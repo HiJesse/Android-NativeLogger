@@ -6,20 +6,20 @@ NativeLogger是Android平台一套日志管理框架.NativeLogger可以帮助开
 
 |状态|功能|默认|
 |:-:|:-:|:-:|
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 注解配置 | 支持 |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 设置TAG | NLogger |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 设置LEVEL | WARN |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 是否捕获全局异常 | false |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 是否开启文件日志 | true |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 文件日志内容格式 | SimpleFormatter |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 日志文件存放路径 | /sdcard/native.logs/ |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 日志文件过期时间 | 1 day |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 日志文件打包周期 | 1 day |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png)| 格式化输出JSON | 支持 |
-|![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png)| 日志混淆 | - |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 注解配置 | 支持 |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 设置TAG | NLogger |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 设置LEVEL | WARN |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 是否捕获全局异常 | false |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 是否开启文件日志 | true |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 文件日志内容格式 | SimpleFormatter |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 日志文件存放路径 | /sdcard/native.logs/ |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 日志文件过期时间 | 1 day |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 日志文件打包周期 | 1 day |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png)| 格式化输出JSON | 支持 |
+|![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_will_black_18dp_1x.png)| 日志混淆 | - |
 
-![](http://od9tun44g.bkt.clouddn.com/ic_done_black_18dp_1x.png) : 已完成
-![](http://od9tun44g.bkt.clouddn.com/ic_done_will_black_18dp_1x.png) : 待完成
+![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_black_18dp_1x.png) : 已完成
+![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/ic_done_will_black_18dp_1x.png) : 待完成
 
 ## Gradle引入
 
